@@ -2,6 +2,7 @@ package com.proyect.employee.employee.services;
 
 import com.proyect.employee.employee.dtos.create.CreateRoleDto;
 import com.proyect.employee.employee.dtos.update.UpdateRoleDto;
+import com.proyect.employee.employee.entities.Permission;
 import com.proyect.employee.employee.entities.Role;
 import com.proyect.employee.employee.exception.ResourceNotFoundException;
 import com.proyect.employee.employee.mappers.MapperNotNull;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -81,6 +84,17 @@ public class RoleService implements IRoleService {
             roleEntity.getPermissions().clear();
             roleEntity.setPermissions(permissionService.getPermits(new HashSet<>(roleDto.getPermissionIds())));
         }
+    }
+
+    public Set<Role> getRoles(Set<Long> roleIds)  {
+        Set<Role> roles = repository.findByIdIn(roleIds);
+        if (roles.size() != roleIds.size()) {
+            List<Long> notFoundRoles = roleIds.stream()
+                    .filter(roleId -> roles.stream().noneMatch(roleFound -> roleFound.getId().equals(roleId)))
+                    .toList();
+            throw new ResourceNotFoundException("Some Roles were not found" + notFoundRoles);
+        }
+        return roles;
     }
 
 }

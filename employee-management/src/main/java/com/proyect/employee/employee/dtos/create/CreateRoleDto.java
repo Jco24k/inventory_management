@@ -21,12 +21,12 @@ import java.util.List;
 @GroupSequence({ CreateRoleDto.class,CreateRoleDto.ValidatedRole.class })
 public class CreateRoleDto {
 
-    @Size(min = 3,max = 30, groups = ValidatedRole.class)
+    @Size(min = 3,max = 30)
     @NotBlank(message = "name must not be null")
     private String name;
 
     @Nullable()
-    @NoDuplicates(groups = ValidatedRole.class)
+    @NoDuplicates()
     private List<@Min(1)Long> permissionIds = new ArrayList<>();
     public interface ValidatedRole {
     }

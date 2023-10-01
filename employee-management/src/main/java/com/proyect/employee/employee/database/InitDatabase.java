@@ -5,10 +5,12 @@ import com.proyect.employee.employee.database.config.EnvironmentConfig;
 import com.proyect.employee.employee.database.model.PermissionData;
 import com.proyect.employee.employee.entities.Permission;
 import com.proyect.employee.employee.entities.Role;
+import com.proyect.employee.employee.entities.User;
 import com.proyect.employee.employee.entities.enums.EPermission;
 import com.proyect.employee.employee.mappers.PermissionDataMapper;
 import com.proyect.employee.employee.repositories.PermissionRepository;
 import com.proyect.employee.employee.repositories.RoleRepository;
+import com.proyect.employee.employee.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -28,14 +30,27 @@ public class InitDatabase implements InitializingBean {
     PermissionData[] permitJson;
     @Autowired
     private PermissionRepository permissionRepository;
-    @Autowired
-    private PermissionDataMapper permissionDataMapper;
+
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PermissionDataMapper permissionDataMapper;
     @Autowired
     private ResourceLoader resourceLoader;
     @Autowired
     private EnvironmentConfig environmentConfig;
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        chargePermitData();
+        validatePermit();
+        registerPermits();
+        initUser();
+    }
 
     public void validatePermit(){
         Set<String> idData = new HashSet<>();
@@ -54,14 +69,6 @@ public class InitDatabase implements InitializingBean {
         }
         log.info("Permissions are correct");
 
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        chargePermitData();
-        validatePermit();
-        registerPermits();
-        initUser();
     }
 
     private void chargePermitData() throws IOException {
@@ -89,9 +96,15 @@ public class InitDatabase implements InitializingBean {
         Permission permission = permissionRepository.findByCode(EPermission.SUPER_ADMIN);
         String roleAdmin = environmentConfig.getRole_admin();
         String userAdmin = environmentConfig.getUser_admin();
+        String passAdmin = environmentConfig.getPass_admin();
+
         Role role = roleRepository.findByName(roleAdmin);
         if(role == null){
             role = roleRepository.save(new Role(roleAdmin,Set.of(permission)));
+        }
+        User user = userRepository.findByUsername(userAdmin);
+        if(user == null){
+            userRepository.save(new User(userAdmin,passAdmin,Set.of(role)));
         }
 
     }
