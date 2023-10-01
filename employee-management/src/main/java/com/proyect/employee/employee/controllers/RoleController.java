@@ -4,6 +4,7 @@ import com.proyect.employee.employee.dtos.create.CreateRoleDto;
 import com.proyect.employee.employee.dtos.update.UpdateRoleDto;
 import com.proyect.employee.employee.entities.Role;
 import com.proyect.employee.employee.services.interfaces.IRoleService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping("/role")
+@Tag(name = "Roles (roles)")
 public class RoleController {
 
     @Autowired
@@ -41,6 +43,12 @@ public class RoleController {
              {
         return ResponseEntity.ok(service.update(roleDto,id));
 
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.ok(String.format("Role with id '%s' deleted successfully", id));
     }
 
 

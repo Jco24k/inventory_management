@@ -1,10 +1,10 @@
 package com.proyect.employee.employee.services;
 
-import com.proyect.employee.employee.dtos.update.UpdatePermitDto;
+import com.proyect.employee.employee.dtos.update.UpdatePermissionDto;
 import com.proyect.employee.employee.entities.Permission;
 import com.proyect.employee.employee.exception.ResourceNotFoundException;
-import com.proyect.employee.employee.repositories.PermitRepository;
-import com.proyect.employee.employee.services.interfaces.IPermitService;
+import com.proyect.employee.employee.repositories.PermissionRepository;
+import com.proyect.employee.employee.services.interfaces.IPermissionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,12 +15,12 @@ import java.util.Collection;
 import java.util.Set;
 
 @Service
-public class PermissionService implements IPermitService {
+public class PermissionService implements IPermissionService {
 
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
-    private PermitRepository repository;
+    private PermissionRepository repository;
 
     @Override
     @Transactional(readOnly = true)
@@ -36,15 +36,13 @@ public class PermissionService implements IPermitService {
         );
     }
 
-
     @Override
     @Transactional()
-    public Permission update(UpdatePermitDto permitDto, Long id) {
+    public Permission update(UpdatePermissionDto permitDto, Long id) {
         Permission permissionFound = findOne(id);
         modelMapper.map(permitDto, permissionFound);
         return repository.save(permissionFound);
     }
-
     public Set<Permission> getPermits(Set<Long> permitIds)  {
         Set<Permission> permissions = repository.findByIdIn(permitIds);
         if (permissions.size() != permitIds.size()) {

@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UpdatePermitDto {
+public class UpdatePermissionDto {
 
     @Nullable
     @Size(max = 120)

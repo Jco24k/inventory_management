@@ -33,3 +33,4 @@ environment:
   user-admin: admin@admin.com
   pass-admin: admin
   role-admin: admin-all-role
+  path-permission: assets/permissions.json

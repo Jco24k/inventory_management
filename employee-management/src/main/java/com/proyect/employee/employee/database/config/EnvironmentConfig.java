@@ -13,4 +13,5 @@ public class EnvironmentConfig {
     private String user_admin;
     private String pass_admin;
     private String role_admin;
+    private String path_permission;
 }

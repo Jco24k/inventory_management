@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PermitData {
+public class PermissionData {
     private String code;
     private String name;
     private String description;

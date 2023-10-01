@@ -2,12 +2,12 @@ package com.proyect.employee.employee.database;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.proyect.employee.employee.database.config.EnvironmentConfig;
-import com.proyect.employee.employee.database.model.PermitData;
+import com.proyect.employee.employee.database.model.PermissionData;
 import com.proyect.employee.employee.entities.Permission;
 import com.proyect.employee.employee.entities.Role;
 import com.proyect.employee.employee.entities.enums.EPermission;
-import com.proyect.employee.employee.mappers.PermitDataMapper;
-import com.proyect.employee.employee.repositories.PermitRepository;
+import com.proyect.employee.employee.mappers.PermissionDataMapper;
+import com.proyect.employee.employee.repositories.PermissionRepository;
 import com.proyect.employee.employee.repositories.RoleRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +25,11 @@ import java.util.*;
 @Slf4j
 public class InitDatabase implements InitializingBean {
 
-    PermitData [] permitJson;
+    PermissionData[] permitJson;
     @Autowired
-    private PermitRepository permitRepository;
+    private PermissionRepository permissionRepository;
     @Autowired
-    private PermitDataMapper permitDataMapper;
+    private PermissionDataMapper permissionDataMapper;
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
@@ -43,7 +43,7 @@ public class InitDatabase implements InitializingBean {
         if(permitJson.length != cantValidPermit){
             throw new RuntimeException(String.format("The files do not contain the same number of permissions valid-permit => %d | permit => %d", cantValidPermit, permitJson.length));
         }
-        for (PermitData permit : permitJson) {
+        for (PermissionData permit : permitJson) {
             String code = permit.getCode();
             if(EPermission.contains(code)){
                 if (idData.contains(code))throw new RuntimeException("Permissions are repeated");
@@ -65,28 +65,28 @@ public class InitDatabase implements InitializingBean {
     }
 
     private void chargePermitData() throws IOException {
-        Resource resource = resourceLoader.getResource("classpath:assets/permits.json");
+        Resource resource = resourceLoader.getResource("classpath:"+environmentConfig.getPath_permission());
         InputStream inputStream = resource.getInputStream();
         ObjectMapper objectMapper = new ObjectMapper();
-        permitJson = objectMapper.readValue(inputStream, PermitData[].class);
+        permitJson = objectMapper.readValue(inputStream, PermissionData[].class);
     }
 
     private void registerPermits(){
-        List<Permission> permissionData = Arrays.stream(permitJson).map(permitDataMapper).toList();
+        List<Permission> permissionData = Arrays.stream(permitJson).map(permissionDataMapper).toList();
         List<Permission> savePermission =  new ArrayList<>();
         permissionData.forEach(permit -> {
-            if (!permitRepository.existsByCode(permit.getCode())) {
+            if (!permissionRepository.existsByCode(permit.getCode())) {
                 savePermission.add(permit);
             }
         });
-        permitRepository.saveAll(savePermission);
+        permissionRepository.saveAll(savePermission);
         log.info("Permissions registered successfully");
     }
 
 
     @Transactional
     private void initUser(){
-        Permission permission = permitRepository.findByCode(EPermission.SUPER_ADMIN);
+        Permission permission = permissionRepository.findByCode(EPermission.SUPER_ADMIN);
         String roleAdmin = environmentConfig.getRole_admin();
         String userAdmin = environmentConfig.getUser_admin();
         Role role = roleRepository.findByName(roleAdmin);

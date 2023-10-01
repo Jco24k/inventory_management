@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Set;
 
 @Repository
-public interface PermitRepository extends JpaRepository<Permission, Long> {
+public interface PermissionRepository extends JpaRepository<Permission, Long> {
     Set<Permission> findByIdIn(Set<Long> permitIds);
     Permission findByCode(EPermission code);
     boolean existsByCode(EPermission code);
