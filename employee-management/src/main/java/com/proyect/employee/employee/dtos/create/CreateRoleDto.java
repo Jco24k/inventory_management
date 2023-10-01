@@ -1,5 +1,6 @@
 package com.proyect.employee.employee.dtos.create;
 
+import com.proyect.employee.employee.dtos.decorators.interfaces.NoDuplicates;
 import jakarta.annotation.Nullable;
 import jakarta.validation.GroupSequence;
 import jakarta.validation.constraints.Min;
@@ -25,6 +26,7 @@ public class CreateRoleDto {
     private String name;
 
     @Nullable()
+    @NoDuplicates(groups = ValidatedRole.class)
     private List<@Min(1)Long> permissionIds = new ArrayList<>();
     public interface ValidatedRole {
     }
