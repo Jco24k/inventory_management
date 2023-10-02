@@ -11,6 +11,7 @@ import com.proyect.employee.employee.mappers.PermissionDataMapper;
 import com.proyect.employee.employee.repositories.PermissionRepository;
 import com.proyect.employee.employee.repositories.RoleRepository;
 import com.proyect.employee.employee.repositories.UserRepository;
+import com.proyect.employee.employee.seed.UserStub;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -104,8 +105,8 @@ public class InitDatabase implements InitializingBean {
         }
         User user = userRepository.findByUsername(userAdmin);
         if(user == null){
-            userRepository.save(new User(userAdmin,passAdmin,Set.of(role)));
+            userRepository.save(UserStub.getStub(userAdmin,passAdmin,Set.of(role)));
         }
-
+        log.info("UserAdmin registered successfully");
     }
 }

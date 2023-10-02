@@ -32,6 +32,12 @@ public class User implements Serializable {
     @Column(unique = true, length = 30,nullable = false)
     private String username;
 
+    @Column(length = 30, nullable = false)
+    private String name;
+
+    @Column(name = "last_name",length = 30)
+    private String lastName;
+
     @Column(length = 60,nullable = false)
     private String password;
 
@@ -46,9 +52,11 @@ public class User implements Serializable {
     @JsonManagedReference
     private Set<Role> roles = new HashSet<>();
 
-    public User(String username, String password,Set<Role> roles){
+    public User(String username, String password,String name,String lastName,Set<Role> roles){
         this.username = username;
         this.password = password;
+        this.name = name;
+        this.lastName = lastName;
         this.roles = roles;
     }
     @PrePersist()

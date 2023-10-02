@@ -30,6 +30,10 @@ public class UpdateUserDto extends CreateUserDto {
     private String password;
 
     @Nullable
+    @Size(min = 1,max = 30, groups = ValidatedUser.class)
+    private String name;
+
+    @Nullable
     private Boolean isActive;
 
     @Nullable
