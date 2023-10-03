@@ -7,7 +7,7 @@ springdoc:
     enabled: true
   swagger-ui:
     enabled: true
-    path: /
+    path: /doc
   pathsToMatch: /**
 spring:
   datasource:

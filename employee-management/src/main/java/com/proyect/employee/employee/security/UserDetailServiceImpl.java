@@ -4,7 +4,6 @@ import com.proyect.employee.employee.entities.Role;
 import com.proyect.employee.employee.entities.User;
 import com.proyect.employee.employee.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,6 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+
 public class UserDetailServiceImpl implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;

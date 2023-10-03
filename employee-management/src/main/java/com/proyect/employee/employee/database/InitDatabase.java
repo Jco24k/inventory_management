@@ -13,6 +13,7 @@ import com.proyect.employee.employee.repositories.RoleRepository;
 import com.proyect.employee.employee.repositories.UserRepository;
 import com.proyect.employee.employee.seed.UserStub;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,24 +27,17 @@ import java.util.*;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class InitDatabase implements InitializingBean {
 
     PermissionData[] permitJson;
-    @Autowired
-    private PermissionRepository permissionRepository;
 
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PermissionDataMapper permissionDataMapper;
-    @Autowired
-    private ResourceLoader resourceLoader;
-    @Autowired
-    private EnvironmentConfig environmentConfig;
+    private final PermissionRepository permissionRepository;
+    private final RoleRepository roleRepository;
+    private final UserRepository userRepository;
+    private final PermissionDataMapper permissionDataMapper;
+    private final ResourceLoader resourceLoader;
+    private final EnvironmentConfig environmentConfig;
 
     @Override
     public void afterPropertiesSet() throws Exception {
