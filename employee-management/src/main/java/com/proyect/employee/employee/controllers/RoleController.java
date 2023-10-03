@@ -1,5 +1,6 @@
 package com.proyect.employee.employee.controllers;
 
+import com.proyect.employee.employee.config.PathController;
 import com.proyect.employee.employee.dtos.create.CreateRoleDto;
 import com.proyect.employee.employee.dtos.update.UpdateRoleDto;
 import com.proyect.employee.employee.entities.Role;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/role")
+@RequestMapping(PathController.ROLE)
 @Tag(name = "Roles (roles)")
 public class RoleController {
 

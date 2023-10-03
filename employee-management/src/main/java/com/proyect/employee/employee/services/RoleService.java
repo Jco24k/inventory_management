@@ -25,7 +25,6 @@ public class RoleService implements IRoleService {
 
     @Autowired
     private RoleRepository repository;
-
     @Autowired
     private PermissionService permissionService;
 

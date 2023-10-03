@@ -1,5 +1,6 @@
 package com.proyect.employee.employee.controllers;
 
+import com.proyect.employee.employee.config.PathController;
 import com.proyect.employee.employee.dtos.update.UpdatePermissionDto;
 import com.proyect.employee.employee.entities.Permission;
 import com.proyect.employee.employee.services.interfaces.IPermissionService;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/permission")
+@RequestMapping(PathController.PERMISSION)
 @Tag(name = "Permissions (permisos)")
 public class PermissionController {
 

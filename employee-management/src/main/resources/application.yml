@@ -34,3 +34,5 @@ environment:
   pass-admin: admin
   role-admin: admin-all-role
   path-permission: assets/permissions.json
+  secret-key: 76397924423F4528482B4D6251655468576D5A7134743777217A25432A46294A
+  expiration-key: 86400000

@@ -1,5 +1,6 @@
 package com.proyect.employee.employee.controllers;
 
+import com.proyect.employee.employee.config.PathController;
 import com.proyect.employee.employee.dtos.create.CreateUserDto;
 import com.proyect.employee.employee.dtos.update.UpdateUserDto;
 import com.proyect.employee.employee.entities.User;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping(PathController.USER)
 @Tag(name = "Users (usuarios)")
 public class UserController {
 

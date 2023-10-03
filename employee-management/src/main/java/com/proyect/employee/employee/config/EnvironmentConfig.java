@@ -1,4 +1,4 @@
-package com.proyect.employee.employee.database.config;
+package com.proyect.employee.employee.config;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,4 +14,7 @@ public class EnvironmentConfig {
     private String pass_admin;
     private String role_admin;
     private String path_permission;
+    private String secret_key;
+    private Long expiration_key;
 }
+

@@ -1,6 +1,5 @@
 package com.proyect.employee.employee.config;
 
-import com.proyect.employee.employee.database.config.EnvironmentConfig;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package com.proyect.employee.employee.database;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.proyect.employee.employee.database.config.EnvironmentConfig;
+import com.proyect.employee.employee.config.EnvironmentConfig;
 import com.proyect.employee.employee.database.model.PermissionData;
 import com.proyect.employee.employee.entities.Permission;
 import com.proyect.employee.employee.entities.Role;

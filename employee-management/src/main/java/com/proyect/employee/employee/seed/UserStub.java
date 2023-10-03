@@ -1,11 +1,9 @@
 package com.proyect.employee.employee.seed;
 
 import com.github.javafaker.Faker;
-import com.proyect.employee.employee.dtos.create.CreateUserDto;
 import com.proyect.employee.employee.entities.Role;
 import com.proyect.employee.employee.entities.User;
 
-import java.util.List;
 import java.util.Set;
 
 public class UserStub {
