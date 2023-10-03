@@ -4,6 +4,7 @@ import com.proyect.employee.employee.config.PathController;
 import com.proyect.employee.employee.dtos.create.CreateRoleDto;
 import com.proyect.employee.employee.dtos.update.UpdateRoleDto;
 import com.proyect.employee.employee.entities.Role;
+import com.proyect.employee.employee.exception.ResourceNotFoundException;
 import com.proyect.employee.employee.services.interfaces.IRoleService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -34,7 +35,7 @@ public class RoleController {
     }
 
     @PostMapping
-    public ResponseEntity<Role> create(@Valid @RequestBody CreateRoleDto roleDto){
+    public ResponseEntity<Role> create(@Valid @RequestBody CreateRoleDto roleDto) throws ResourceNotFoundException {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(roleDto));
     }
 

@@ -1,7 +1,6 @@
 package com.proyect.employee.employee.entities.enums;
 
 import lombok.Getter;
-
 import java.util.Arrays;
 
 @Getter

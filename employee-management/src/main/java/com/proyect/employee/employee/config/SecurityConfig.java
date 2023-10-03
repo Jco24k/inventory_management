@@ -4,11 +4,12 @@ import com.proyect.employee.employee.entities.enums.EPermission;
 import com.proyect.employee.employee.security.JwtAuthenticationFilter;
 import com.proyect.employee.employee.security.UserDetailServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -29,26 +30,27 @@ public class SecurityConfig {
     private  final JwtAuthenticationFilter jwtAuthenticationFilter;
     private  final UserDetailServiceImpl userDetailService;
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests( authRequest -> authRequest
+                        .requestMatchers(GET, String.format("%s/**",PathController.PERMISSION)).hasAnyAuthority(EPermission.READ_PERMIT.getCode(), EPermission.SUPER_ADMIN.getCode())
+                        .requestMatchers(PATCH, String.format("%s/**",PathController.PERMISSION)).hasAnyAuthority(EPermission.UPDATE_PERMIT.getCode(), EPermission.SUPER_ADMIN.getCode())
 
-                        .requestMatchers(GET, String.format("%s/**",PathController.PERMISSION)).hasAuthority(EPermission.READ_PERMIT.getCode())
-                        .requestMatchers(PATCH, String.format("%s/**",PathController.PERMISSION)).hasAuthority(EPermission.UPDATE_PERMIT.getCode())
+                        .requestMatchers(GET, String.format("%s/**",PathController.USER)).hasAnyAuthority(EPermission.READ_USER.getCode(), EPermission.SUPER_ADMIN.getCode())
+                        .requestMatchers(POST, String.format("%s/**",PathController.USER)).hasAnyAuthority(EPermission.CREATE_USER.getCode(), EPermission.SUPER_ADMIN.getCode())
+                        .requestMatchers(PATCH, String.format("%s/**",PathController.USER)).hasAnyAuthority(EPermission.UPDATE_USER.getCode(), EPermission.SUPER_ADMIN.getCode())
+                        .requestMatchers(DELETE, String.format("%s/**",PathController.USER)).hasAnyAuthority(EPermission.DELETE_USER.getCode(), EPermission.SUPER_ADMIN.getCode())
 
-                        .requestMatchers(GET, String.format("%s/**",PathController.USER)).hasAuthority(EPermission.READ_USER.getCode())
-                        .requestMatchers(POST, String.format("%s/**",PathController.USER)).hasAuthority(EPermission.CREATE_USER.getCode())
-                        .requestMatchers(PATCH, String.format("%s/**",PathController.USER)).hasAuthority(EPermission.UPDATE_USER.getCode())
-                        .requestMatchers(DELETE, String.format("%s/**",PathController.USER)).hasAuthority(EPermission.DELETE_USER.getCode())
+                        .requestMatchers(GET, String.format("%s/**",PathController.ROLE)).hasAnyAuthority(EPermission.READ_ROLE.getCode(), EPermission.SUPER_ADMIN.getCode())
+                        .requestMatchers(POST, String.format("%s/**",PathController.ROLE)).hasAnyAuthority(EPermission.CREATE_ROLE.getCode(), EPermission.SUPER_ADMIN.getCode())
+                        .requestMatchers(PATCH, String.format("%s/**",PathController.ROLE)).hasAnyAuthority(EPermission.UPDATE_ROLE.getCode(), EPermission.SUPER_ADMIN.getCode())
+                        .requestMatchers(DELETE, String.format("%s/**",PathController.ROLE)).hasAnyAuthority(EPermission.DELETE_ROLE.getCode(), EPermission.SUPER_ADMIN.getCode())
 
-                        .requestMatchers(GET, String.format("%s/**",PathController.ROLE)).hasAuthority(EPermission.READ_ROLE.getCode())
-                        .requestMatchers(POST, String.format("%s/**",PathController.ROLE)).hasAuthority(EPermission.CREATE_ROLE.getCode())
-                        .requestMatchers(PATCH, String.format("%s/**",PathController.ROLE)).hasAuthority(EPermission.UPDATE_ROLE.getCode())
-                        .requestMatchers(DELETE, String.format("%s/**",PathController.ROLE)).hasAuthority(EPermission.DELETE_ROLE.getCode())
+                        .requestMatchers(POST,String.format("%s/**",PathController.AUTH)).permitAll()
+
                         .requestMatchers("/doc/**","/swagger-ui/**","/v3/**").permitAll()
-                        .requestMatchers("/**").authenticated()
+                        .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -57,9 +59,10 @@ public class SecurityConfig {
                 .build();
     }
 
-
-
-
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
     @Bean
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();

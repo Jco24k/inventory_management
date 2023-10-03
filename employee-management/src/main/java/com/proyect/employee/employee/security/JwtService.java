@@ -30,10 +30,10 @@ public class JwtService {
                 .getBody();
     }
 
-    public String generateToken(User user){
+    public String generateToken(CustomUserDetails user){
         return createToken(new HashMap<>(), user);
     }
-    private String createToken(Map<String, Object> extraClaims, User user){
+    private String createToken(Map<String, Object> extraClaims, CustomUserDetails user){
         return Jwts.builder()
                 .setClaims(extraClaims)
                 .setSubject(user.getId().toString())

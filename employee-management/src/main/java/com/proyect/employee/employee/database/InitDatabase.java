@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.core.io.Resource;
 
@@ -38,6 +39,7 @@ public class InitDatabase implements InitializingBean {
     private final PermissionDataMapper permissionDataMapper;
     private final ResourceLoader resourceLoader;
     private final EnvironmentConfig environmentConfig;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -99,7 +101,7 @@ public class InitDatabase implements InitializingBean {
         }
         User user = userRepository.findByUsername(userAdmin);
         if(user == null){
-            userRepository.save(UserStub.getStub(userAdmin,passAdmin,Set.of(role)));
+            userRepository.save(UserStub.getStub(userAdmin,passwordEncoder.encode(passAdmin),Set.of(role)));
         }
         log.info("UserAdmin registered successfully");
     }
