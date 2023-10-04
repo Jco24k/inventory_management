@@ -1,0 +1,33 @@
+
+server:
+  port: 9091
+  servlet:
+    context-path: /api
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /doc
+  pathsToMatch: /**
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db_inventory?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect:
+          storage_engine: innodb
+  data:
+    jpa:
+      repositories:
+        enabled: true
+
