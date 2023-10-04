@@ -13,6 +13,6 @@ public class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "is_active", columnDefinition = "bit(1) default 1")
+    @Column(name = "is_active", columnDefinition = "boolean default true")
     private Boolean isActive;
 }
