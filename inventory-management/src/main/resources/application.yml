@@ -12,8 +12,8 @@ springdoc:
   pathsToMatch: /**
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/db_inventory?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    username: root
+    url: jdbc:postgresql://localhost:5432/db_postgres
+    username: postgres
     password: root
     driver-class-name: org.postgresql.Driver
   jpa:
