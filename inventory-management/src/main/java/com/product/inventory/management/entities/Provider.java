@@ -7,9 +7,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,20 +19,22 @@ import java.util.Set;
 @DynamicUpdate
 @Entity
 @Table
-public class Category extends BaseEntity{
+public class Provider extends BaseEntity{
 
     @Column(unique = true, length = 30,nullable = false)
     private String name;
 
-    @Column( length = 120)
-    private String description;
+    @Column( length = 11)
+    private String ruc;
+
+    @Column(length = 150)
+    private String address;
+
+    @Column(name = "phone" ,columnDefinition = "TEXT[]")
+    private Set<String> phones;
 
     @OneToMany(fetch = FetchType.EAGER,cascade = { CascadeType.MERGE }, mappedBy = "category" ,targetEntity = SubCategory.class)
-    @JsonManagedReference
-    private Set<SubCategory> subCategories = new HashSet<>();
-
-    @ManyToMany(fetch = FetchType.EAGER,cascade = { CascadeType.MERGE }, mappedBy = "categories" ,targetEntity = Product.class)
     @JsonBackReference
-    private Set<Product> products = new HashSet<>();
+    private Set<SubCategory> subCategories = new HashSet<>();
 
 }
