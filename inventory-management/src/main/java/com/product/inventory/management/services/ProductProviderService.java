@@ -6,23 +6,35 @@ import com.product.inventory.management.entities.composite.ProductProvider;
 import com.product.inventory.management.entities.composite.ProductProviderPk;
 import com.product.inventory.management.exception.ResourceNotFoundException;
 import com.product.inventory.management.mappers.MapperNotNull;
+import com.product.inventory.management.repositories.LogPriceRepository;
 import com.product.inventory.management.repositories.ProductProviderRepository;
 import com.product.inventory.management.services.interfaces.IProductProviderService;
+import com.product.inventory.management.services.interfaces.IProductService;
+import com.product.inventory.management.services.interfaces.IProviderService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.Set;
 
 @Service
-@RequiredArgsConstructor
 public class ProductProviderService implements IProductProviderService {
 
     private final ProductProviderRepository repository;
-    private final ProviderService providerService;
-    private final ProductService productService;
+    private final IProviderService providerService;
+    private final IProductService productService;
+    public ProductProviderService(ProductProviderRepository repository,
+                                  IProviderService providerService,
+                                  @Lazy IProductService productService) {
+        this.repository = repository;
+        this.providerService = providerService;
+        this.productService = productService;
+    }
+
+
 
     @Override
     @Transactional(readOnly = true)
@@ -72,6 +84,7 @@ public class ProductProviderService implements IProductProviderService {
         return modelMapper;
     }
 
+    @Override
     public ProductProvider getAndVerifyDto(CreateProductProviderDto requestDto, ProductProvider entity, Product product){
         modelMapperWithoutFks().map(requestDto, entity);
         if(requestDto.getProviderId()!=null){

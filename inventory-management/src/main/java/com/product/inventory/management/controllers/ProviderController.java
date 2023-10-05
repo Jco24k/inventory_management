@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
@@ -38,7 +39,7 @@ public class ProviderController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<Provider> patch(@PathVariable Long id,
-                                         @RequestBody @Valid UpdateProviderDto requestDto)
+                                         @RequestBody @Validated(CreateProviderDto.ValidateUpdate.class) UpdateProviderDto requestDto)
              {
         return ResponseEntity.ok(service.update(requestDto,id));
     }

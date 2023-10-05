@@ -5,6 +5,7 @@ import com.product.inventory.management.dtos.update.UpdateSubCategoryDto;
 import com.product.inventory.management.entities.SubCategory;
 
 import java.util.Collection;
+import java.util.Set;
 
 public interface ISubCategoryService {
     Collection<SubCategory> findAll();
@@ -12,4 +13,6 @@ public interface ISubCategoryService {
     SubCategory create(CreateSubCategoryDto categoryDto, Long categoryId) ;
     SubCategory update(UpdateSubCategoryDto categoryDto, Long id) ;
     void delete(Long id) ;
+
+    Set<SubCategory> getSubCategories(Set<Long> listIds);
 }

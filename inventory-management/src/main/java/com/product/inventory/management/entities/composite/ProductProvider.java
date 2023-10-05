@@ -1,6 +1,7 @@
 package com.product.inventory.management.entities.composite;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.product.inventory.management.entities.Product;
 import com.product.inventory.management.entities.Provider;
 import jakarta.persistence.*;
@@ -24,15 +25,15 @@ import java.math.BigDecimal;
 @IdClass(ProductProviderPk.class)
 public class ProductProvider {
     @Id
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = { CascadeType.MERGE})
     @JoinColumn(name = "product_id")
-    @JsonBackReference
+    @JsonManagedReference
     private Product product;
 
     @Id
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = { CascadeType.MERGE})
     @JoinColumn(name = "provider_id")
-    @JsonBackReference
+    @JsonManagedReference
     private Provider provider;
 
     @Column(nullable = false, columnDefinition="Decimal(10,2)")

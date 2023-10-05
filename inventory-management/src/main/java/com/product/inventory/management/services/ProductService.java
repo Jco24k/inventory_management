@@ -7,11 +7,13 @@ import com.product.inventory.management.entities.composite.ProductProvider;
 import com.product.inventory.management.exception.ResourceNotFoundException;
 import com.product.inventory.management.mappers.MapperNotNull;
 import com.product.inventory.management.repositories.ProductRepository;
+import com.product.inventory.management.services.interfaces.ICategoryService;
+import com.product.inventory.management.services.interfaces.IProductProviderService;
 import com.product.inventory.management.services.interfaces.IProductService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
@@ -22,12 +24,19 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class ProductService implements IProductService {
 
     private final ProductRepository repository;
-    private final CategoryService categoryService;
-    private final ProductProviderService productProviderService;
+    private final ICategoryService categoryService;
+    private final IProductProviderService productProviderService;
+
+    public ProductService(ProductRepository repository,
+                          ICategoryService categoryService,
+                                  @Lazy IProductProviderService productProviderService) {
+        this.repository = repository;
+        this.categoryService = categoryService;
+        this.productProviderService = productProviderService;
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -80,7 +89,8 @@ public class ProductService implements IProductService {
         return modelMapper;
     }
 
-    private void getAndVerifyDto(CreateProductDto requestDto,Product entity){
+    @Override
+    public void getAndVerifyDto(CreateProductDto requestDto,Product entity){
         modelMapperWithoutFks().map(requestDto, entity);
         if(!requestDto.getCategoryIds().isEmpty()){
             entity.getCategories().clear();
@@ -88,15 +98,16 @@ public class ProductService implements IProductService {
         }
         if(!requestDto.getProductProviderDtos().isEmpty()){
             entity.getProductProviders().clear();
-            entity.setProductProviders(
+            Set<ProductProvider> productProvidersSet =
                     requestDto.getProductProviderDtos().stream().map(
                             productProvider -> productProviderService.getAndVerifyDto(productProvider,
                                     new ProductProvider(),entity)
-                    ).collect(Collectors.toSet())
-            );
+                    ).collect(Collectors.toSet());
+            entity.setProductProviders(productProvidersSet);
         }
     }
 
+    @Override
     public Set<Product> getProducts(Set<Long> listIds)  {
         Set<Product> dataFound = repository.findByIdIn(listIds);
         if (dataFound.size() != listIds.size()) {

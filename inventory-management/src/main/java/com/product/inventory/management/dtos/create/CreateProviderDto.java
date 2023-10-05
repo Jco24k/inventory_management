@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +19,7 @@ public class CreateProviderDto {
     @Size(min = 1,max = 50, groups = ValidateUpdate.class)
     private String name;
 
-    @Length(max = 11)
+    @Size(max = 11,min = 11)
     @NotBlank(message = "ruc must not be null")
     private String ruc;
 

@@ -6,6 +6,7 @@ import com.product.inventory.management.entities.SubCategory;
 import com.product.inventory.management.exception.ResourceNotFoundException;
 import com.product.inventory.management.mappers.MapperNotNull;
 import com.product.inventory.management.repositories.SubCategoryRepository;
+import com.product.inventory.management.services.interfaces.ICategoryService;
 import com.product.inventory.management.services.interfaces.ISubCategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ import java.util.Set;
 public class SubCategoryService implements ISubCategoryService {
 
     private final SubCategoryRepository repository;
-    private final CategoryService categoryService;
+    private final ICategoryService categoryService;
 
     @Override
     @Transactional(readOnly = true)
@@ -61,6 +62,7 @@ public class SubCategoryService implements ISubCategoryService {
         repository.save(dataFound);
     }
 
+    @Override
     public Set<SubCategory> getSubCategories(Set<Long> listIds)  {
         Set<SubCategory> subCategoriesFound = repository.findByIdIn(listIds);
         if (subCategoriesFound.size() != listIds.size()) {
