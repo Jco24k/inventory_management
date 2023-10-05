@@ -3,6 +3,7 @@ package com.product.inventory.management.services;
 import com.product.inventory.management.dtos.create.CreateProductDto;
 import com.product.inventory.management.dtos.update.UpdateProductDto;
 import com.product.inventory.management.entities.Product;
+import com.product.inventory.management.entities.composite.ProductProvider;
 import com.product.inventory.management.exception.ResourceNotFoundException;
 import com.product.inventory.management.mappers.MapperNotNull;
 import com.product.inventory.management.repositories.ProductRepository;
@@ -17,6 +18,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -25,6 +27,7 @@ public class ProductService implements IProductService {
 
     private final ProductRepository repository;
     private final CategoryService categoryService;
+    private final ProductProviderService productProviderService;
 
     @Override
     @Transactional(readOnly = true)
@@ -82,6 +85,15 @@ public class ProductService implements IProductService {
         if(!requestDto.getCategoryIds().isEmpty()){
             entity.getCategories().clear();
             entity.setCategories(categoryService.getCategories(new HashSet<>(requestDto.getCategoryIds())));
+        }
+        if(!requestDto.getProductProviderDtos().isEmpty()){
+            entity.getProductProviders().clear();
+            entity.setProductProviders(
+                    requestDto.getProductProviderDtos().stream().map(
+                            productProvider -> productProviderService.getAndVerifyDto(productProvider,
+                                    new ProductProvider(),entity)
+                    ).collect(Collectors.toSet())
+            );
         }
     }
 

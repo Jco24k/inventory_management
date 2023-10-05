@@ -5,4 +5,5 @@ public interface PathController {
     String CATEGORY = "/category";
     String SUBCATEGORY = "/subcategory";
     String PROVIDER = "/provider";
+    String PRODUCT_PROVIDER = "/product_provider";
 }

@@ -29,4 +29,7 @@ public class UpdateProductDto {
 
     @Nullable
     private Boolean hasIgv;
+
+    @Nullable
+    private Boolean isActive;
 }
