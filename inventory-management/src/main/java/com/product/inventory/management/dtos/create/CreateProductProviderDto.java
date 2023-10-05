@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 public class CreateProductProviderDto {
 
     @Min(1)
-    @NotBlank(message = "providerId must not be null")
+    @NotNull(message = "providerId must not be null")
     private Long providerId;
 
     @NotNull(message = "cost_amount must not be null")

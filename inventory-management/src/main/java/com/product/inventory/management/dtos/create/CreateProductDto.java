@@ -35,9 +35,6 @@ public class CreateProductDto {
     private List<Long> categoryIds = new ArrayList<>();
 
     @Nullable()
-    private List<CreateSubCategoryDto> subCategoryDtos = new ArrayList<>();
-
-    @Nullable()
     private List<CreateProductProviderDto> productProviderDtos = new ArrayList<>();
 
     public interface ValidateUpdate {

@@ -1,6 +1,7 @@
 package com.product.inventory.management.entities.composite;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.product.inventory.management.entities.Product;
 import com.product.inventory.management.entities.Provider;
@@ -12,6 +13,8 @@ import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Getter
@@ -23,11 +26,15 @@ import java.math.BigDecimal;
 @Entity
 @Table
 @IdClass(ProductProviderPk.class)
-public class ProductProvider {
+public class ProductProvider  implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     @Id
     @ManyToOne(cascade = { CascadeType.MERGE})
     @JoinColumn(name = "product_id")
     @JsonManagedReference
+    @JsonIgnoreProperties({"productProviders", "categories"})
     private Product product;
 
     @Id
