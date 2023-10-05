@@ -1,9 +1,7 @@
 package com.product.inventory.management.dtos.create;
 
-import com.product.inventory.management.dtos.decorators.interfaces.NoDuplicates;
 import jakarta.annotation.Nullable;
 import jakarta.validation.GroupSequence;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -26,7 +24,7 @@ public class CreateCategoryDto {
     private String description;
 
     @Nullable()
-    private List<CreateSubCategoryDto> subCategoryDto = new ArrayList<>();
+    private List<CreateSubCategoryDto> subCategoryDtos = new ArrayList<>();
     public interface ValidateUpdate {
     }
 }

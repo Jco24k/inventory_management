@@ -38,13 +38,13 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<Category> create(@Valid @RequestBody CreateCategoryDto requestDto) {
+    public ResponseEntity<Category> save(@Valid @RequestBody CreateCategoryDto requestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(requestDto));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Category> patch(@PathVariable Long id,
-                                         @RequestBody @Validated(CreateCategoryDto.ValidateUpdate.class) UpdateCategoryDto requestDto)
+                                         @RequestBody @Valid UpdateCategoryDto requestDto)
              {
         return ResponseEntity.ok(service.update(requestDto,id));
     }

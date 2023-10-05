@@ -52,7 +52,7 @@ public class ProductService implements IProductService {
     @Transactional()
     public Product update(UpdateProductDto requestDto, Long id) {
         Product dataFound = findOne(id);
-        getAndVerifyDto(requestDto,dataFound);
+        modelMapperWithoutFks().map(requestDto,dataFound);
         return repository.save(dataFound);
     }
 

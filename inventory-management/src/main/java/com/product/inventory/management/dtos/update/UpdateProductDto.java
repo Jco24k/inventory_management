@@ -13,14 +13,14 @@ import java.util.List;
 
 @Getter
 @Setter
-public class UpdateProductDto extends CreateProductDto {
+public class UpdateProductDto {
 
     @Nullable
-    @Size(min = 1,max = 30, groups = ValidateUpdate.class)
+    @Size(min = 1,max = 30)
     private String name;
 
     @Nullable
-    @Size(min = 1,max = 120, groups = ValidateUpdate.class)
+    @Size(min = 1,max = 120)
     private String description;
 
     @Nullable
@@ -29,8 +29,4 @@ public class UpdateProductDto extends CreateProductDto {
 
     @Nullable
     private Boolean hasIgv;
-
-    @Nullable
-    @NoDuplicates(groups = ValidateUpdate.class)
-    private List<Long> categoryIds = new ArrayList<>();
 }

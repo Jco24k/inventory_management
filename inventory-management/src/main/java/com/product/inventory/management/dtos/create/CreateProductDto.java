@@ -6,7 +6,6 @@ import jakarta.validation.GroupSequence;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +24,7 @@ public class CreateProductDto {
     private String description;
 
     @NotNull(message = "price must not be null")
-    @Positive()
+    @Min(1)
     private BigDecimal price;
 
     @Nullable
@@ -34,6 +33,13 @@ public class CreateProductDto {
     @Nullable()
     @NoDuplicates()
     private List<Long> categoryIds = new ArrayList<>();
+
+    @Nullable()
+    private List<CreateSubCategoryDto> subCategoryDtos = new ArrayList<>();
+
+    @Nullable()
+    private List<CreateProductProviderDto> productProviderDtos = new ArrayList<>();
+
     public interface ValidateUpdate {
     }
 }

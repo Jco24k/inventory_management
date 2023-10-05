@@ -48,8 +48,8 @@ public class Product extends BaseEntity {
     @JsonManagedReference
     private Set<Category> categories = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.EAGER,cascade = { CascadeType.PERSIST,CascadeType.MERGE }, mappedBy = "product" ,targetEntity = ProductProvider.class)
-    @JsonManagedReference
+    @OneToMany(fetch = FetchType.EAGER,cascade = {CascadeType.MERGE }, mappedBy = "product" ,targetEntity = ProductProvider.class)
+    @JsonBackReference
     private Set<ProductProvider> productProviders = new HashSet<>();
 
     @OneToMany(fetch = FetchType.EAGER,cascade = { CascadeType.MERGE }, mappedBy = "product" ,targetEntity = LogPrice.class)

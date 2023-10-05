@@ -77,8 +77,8 @@ public class CategoryService implements ICategoryService {
 
     private void getAndVerifyDto(CreateCategoryDto requestDto,Category entity){
         modelMapperWithoutFks().map(requestDto, entity);
-        if(!requestDto.getSubCategoryDto().isEmpty()){
-            entity.setSubCategories(requestDto.getSubCategoryDto()
+        if(!requestDto.getSubCategoryDtos().isEmpty()){
+            entity.setSubCategories(requestDto.getSubCategoryDtos()
                     .stream().map(subCategoryDto -> subCategoryDtoMapper.
                             apply(subCategoryDto,entity)).collect(Collectors.toSet()));
         }

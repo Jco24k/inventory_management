@@ -39,7 +39,7 @@ public class ProductController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<Product> patch(@PathVariable Long id,
-                                         @RequestBody @Validated(CreateProductDto.ValidateUpdate.class) UpdateProductDto permissionDto)
+                                         @RequestBody @Valid UpdateProductDto permissionDto)
              {
         return ResponseEntity.ok(service.update(permissionDto,id));
     }
