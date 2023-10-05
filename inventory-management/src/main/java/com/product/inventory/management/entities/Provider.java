@@ -1,8 +1,8 @@
 package com.product.inventory.management.entities;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.product.inventory.management.entities.composite.ProductProvider;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -33,8 +33,8 @@ public class Provider extends BaseEntity{
     @Column(name = "phone" ,columnDefinition = "TEXT[]")
     private Set<String> phones;
 
-    @OneToMany(fetch = FetchType.EAGER,cascade = { CascadeType.MERGE }, mappedBy = "category" ,targetEntity = SubCategory.class)
-    @JsonBackReference
-    private Set<SubCategory> subCategories = new HashSet<>();
+    @OneToMany(fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST, CascadeType.MERGE }, mappedBy = "provider" ,targetEntity = ProductProvider.class)
+    @JsonManagedReference
+    private Set<ProductProvider> productProviders = new HashSet<>();
 
 }

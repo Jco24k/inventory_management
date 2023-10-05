@@ -5,6 +5,7 @@ import com.product.inventory.management.dtos.update.UpdateCategoryDto;
 import com.product.inventory.management.entities.Category;
 import com.product.inventory.management.exception.ResourceNotFoundException;
 import com.product.inventory.management.mappers.MapperNotNull;
+import com.product.inventory.management.mappers.SubCategoryDtoMapper;
 import com.product.inventory.management.repositories.CategoryRepository;
 import com.product.inventory.management.services.interfaces.ICategoryService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -25,6 +27,7 @@ public class CategoryService implements ICategoryService {
 
     private final CategoryRepository repository;
     private final SubCategoryService subCategoryService;
+    private final SubCategoryDtoMapper subCategoryDtoMapper;
 
     @Override
     @Transactional(readOnly = true)
@@ -52,7 +55,7 @@ public class CategoryService implements ICategoryService {
     @Transactional()
     public Category update(UpdateCategoryDto requestDto, Long id) {
         Category dataFound = findOne(id);
-        getAndVerifyDto(requestDto,dataFound);
+        modelMapperWithoutFks().map(requestDto,dataFound);
         return repository.save(dataFound);
     }
 
@@ -77,9 +80,8 @@ public class CategoryService implements ICategoryService {
 
     private void getAndVerifyDto(CreateCategoryDto requestDto,Category entity){
         modelMapperWithoutFks().map(requestDto, entity);
-        if(!requestDto.getSubCategoryIds().isEmpty()){
-            entity.getSubCategories().clear();
-            entity.setSubCategories(subCategoryService.getSubCategories(new HashSet<>(requestDto.getSubCategoryIds())));
+        if(!requestDto.getSubCategoryDto().isEmpty()){
+            entity.setSubCategories(requestDto.getSubCategoryDto().stream().map(subCategoryDtoMapper) .collect(Collectors.toSet()));
         }
     }
 

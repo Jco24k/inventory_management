@@ -31,4 +31,9 @@ public class SubCategory extends BaseEntity {
     @JsonBackReference
     private Category category;
 
+    public SubCategory(String name, String description){
+        this.name = name;
+        this.description = description;
+    }
+
 }

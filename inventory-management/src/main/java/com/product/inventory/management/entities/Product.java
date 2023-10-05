@@ -2,12 +2,15 @@ package com.product.inventory.management.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.product.inventory.management.entities.composite.ProductProvider;
+import com.product.inventory.management.entities.listener.AuditLogPriceListener;
+import com.product.inventory.management.entities.logs.LogPrice;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import java.io.Serial;
-import java.io.Serializable;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,7 +24,8 @@ import java.util.Set;
 @DynamicUpdate
 @Entity
 @Table
-public class Product extends BaseEntity  {
+@EntityListeners({AuditingEntityListener.class, AuditLogPriceListener.class})
+public class Product extends BaseEntity {
 
     @Column(unique = true, length = 30,nullable = false)
     private String name;
@@ -42,5 +46,13 @@ public class Product extends BaseEntity  {
     )
     @JsonManagedReference
     private Set<Category> categories = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.EAGER,cascade = { CascadeType.PERSIST,CascadeType.MERGE }, mappedBy = "product" ,targetEntity = ProductProvider.class)
+    @JsonManagedReference
+    private Set<ProductProvider> productProviders = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.EAGER,cascade = { CascadeType.MERGE }, mappedBy = "product" ,targetEntity = LogPrice.class)
+    @JsonManagedReference
+    private Set<LogPrice> logPrices = new HashSet<>();
 
 }

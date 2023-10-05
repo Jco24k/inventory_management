@@ -1,4 +1,4 @@
-package com.product.inventory.management.entities.foreign_key;
+package com.product.inventory.management.entities.composite;
 
 import lombok.*;
 
@@ -14,6 +14,6 @@ public class ProductProviderPk implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private Long productId;
-    private Long providerId;
+    private Long product;
+    private Long provider;
 }
