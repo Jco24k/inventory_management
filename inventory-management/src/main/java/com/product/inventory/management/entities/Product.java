@@ -1,6 +1,7 @@
 package com.product.inventory.management.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.product.inventory.management.entities.composite.ProductProvider;
 import com.product.inventory.management.entities.listener.AuditLogPriceListener;
@@ -52,7 +53,7 @@ public class Product extends BaseEntity {
     private Set<ProductProvider> productProviders = new HashSet<>();
 
     @OneToMany(fetch = FetchType.EAGER,cascade = { CascadeType.MERGE }, mappedBy = "product" ,targetEntity = LogPrice.class)
-    @JsonManagedReference
+    @JsonBackReference
     private Set<LogPrice> logPrices = new HashSet<>();
 
 }

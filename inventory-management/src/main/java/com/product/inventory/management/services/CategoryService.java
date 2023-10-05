@@ -14,10 +14,8 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,7 +24,6 @@ import java.util.stream.Collectors;
 public class CategoryService implements ICategoryService {
 
     private final CategoryRepository repository;
-    private final SubCategoryService subCategoryService;
     private final SubCategoryDtoMapper subCategoryDtoMapper;
 
     @Override
@@ -81,7 +78,9 @@ public class CategoryService implements ICategoryService {
     private void getAndVerifyDto(CreateCategoryDto requestDto,Category entity){
         modelMapperWithoutFks().map(requestDto, entity);
         if(!requestDto.getSubCategoryDto().isEmpty()){
-            entity.setSubCategories(requestDto.getSubCategoryDto().stream().map(subCategoryDtoMapper) .collect(Collectors.toSet()));
+            entity.setSubCategories(requestDto.getSubCategoryDto()
+                    .stream().map(subCategoryDto -> subCategoryDtoMapper.
+                            apply(subCategoryDto,entity)).collect(Collectors.toSet()));
         }
     }
 

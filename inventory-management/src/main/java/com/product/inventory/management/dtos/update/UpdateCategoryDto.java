@@ -25,8 +25,4 @@ public class UpdateCategoryDto extends CreateCategoryDto {
 
     @Nullable
     private Boolean isActive;
-
-    @Nullable
-    @NoDuplicates(groups = ValidateUpdate.class)
-    private List<Long> subCategoryIds = new ArrayList<>();
 }

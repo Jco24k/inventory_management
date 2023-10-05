@@ -45,4 +45,10 @@ public class LogPrice implements Serializable {
     @JsonBackReference
     private Product product;
 
+    public LogPrice(BigDecimal previous_price, BigDecimal new_price, Product product){
+        this.previous_price = previous_price;
+        this.new_price = new_price;
+        this.product = product;
+    }
+
 }

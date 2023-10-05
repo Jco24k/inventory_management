@@ -26,7 +26,6 @@ public class CreateCategoryDto {
     private String description;
 
     @Nullable()
-    @NoDuplicates()
     private List<CreateSubCategoryDto> subCategoryDto = new ArrayList<>();
     public interface ValidateUpdate {
     }

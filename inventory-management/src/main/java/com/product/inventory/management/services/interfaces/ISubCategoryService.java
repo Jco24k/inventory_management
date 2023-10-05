@@ -9,7 +9,7 @@ import java.util.Collection;
 public interface ISubCategoryService {
     Collection<SubCategory> findAll();
     SubCategory findOne(Long id);
-    SubCategory create(CreateSubCategoryDto categoryDto) ;
+    SubCategory create(CreateSubCategoryDto categoryDto, Long categoryId) ;
     SubCategory update(UpdateSubCategoryDto categoryDto, Long id) ;
     void delete(Long id) ;
 }

@@ -26,14 +26,9 @@ public class SubCategory extends BaseEntity {
     @Column(length = 120)
     private String description;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.MERGE} ,targetEntity = Category.class)
-    @JoinColumn(name = "category_id")
+    @ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST,CascadeType.MERGE} ,targetEntity = Category.class)
+    @JoinColumn(name = "category_id",nullable = false)
     @JsonBackReference
     private Category category;
-
-    public SubCategory(String name, String description){
-        this.name = name;
-        this.description = description;
-    }
 
 }

@@ -9,17 +9,15 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serial;
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
-@Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
+@Setter
+@Getter
 @Entity
 @Table
 public class Category extends BaseEntity{
@@ -30,7 +28,7 @@ public class Category extends BaseEntity{
     @Column( length = 120)
     private String description;
 
-    @OneToMany(fetch = FetchType.EAGER,cascade = { CascadeType.MERGE }, mappedBy = "category" ,targetEntity = SubCategory.class)
+    @OneToMany(fetch = FetchType.EAGER,cascade = { CascadeType.PERSIST, CascadeType.MERGE }, mappedBy = "category" ,targetEntity = SubCategory.class)
     @JsonManagedReference
     private Set<SubCategory> subCategories = new HashSet<>();
 

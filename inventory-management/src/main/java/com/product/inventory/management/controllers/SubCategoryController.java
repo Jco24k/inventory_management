@@ -38,8 +38,9 @@ public class SubCategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<SubCategory> create(@Valid @RequestBody CreateSubCategoryDto requestDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(requestDto));
+    public ResponseEntity<SubCategory> create(@Valid @RequestBody CreateSubCategoryDto requestDto,
+                                              @RequestParam(value = "categoryId", required = true) Long categoryId) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(requestDto,categoryId));
     }
 
     @PatchMapping("/{id}")

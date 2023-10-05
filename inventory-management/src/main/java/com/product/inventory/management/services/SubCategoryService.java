@@ -7,7 +7,7 @@ import com.product.inventory.management.exception.ResourceNotFoundException;
 import com.product.inventory.management.mappers.MapperNotNull;
 import com.product.inventory.management.repositories.SubCategoryRepository;
 import com.product.inventory.management.services.interfaces.ISubCategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
@@ -15,10 +15,11 @@ import java.util.List;
 import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class SubCategoryService implements ISubCategoryService {
 
-    @Autowired
-    private SubCategoryRepository repository;
+    private final SubCategoryRepository repository;
+    private final CategoryService categoryService;
 
     @Override
     @Transactional(readOnly = true)
@@ -36,9 +37,12 @@ public class SubCategoryService implements ISubCategoryService {
 
     @Override
     @Transactional()
-    public SubCategory create(CreateSubCategoryDto requestDto) {
+    public SubCategory create(CreateSubCategoryDto requestDto,Long categoryId) {
         SubCategory newCategory = new SubCategory();
         MapperNotNull.notNullMapper().map(requestDto, newCategory);
+        if(categoryId != null){
+            newCategory.setCategory(categoryService.findOne(categoryId));
+        }
         return repository.save(newCategory);
     }
 
