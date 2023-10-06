@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@Service
 @FeignClient(name = "product-management", url= "http://localhost:9091/api")
 public interface ProductManagementFeignClient {
     @GetMapping("/product/{id}")

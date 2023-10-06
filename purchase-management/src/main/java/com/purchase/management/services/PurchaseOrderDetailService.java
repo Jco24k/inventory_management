@@ -23,7 +23,7 @@ public class PurchaseOrderDetailService implements IPurchaseOrderDetailService {
     private final ProductManagementFeignClient productManagementService;
     private final IPurchaseOrderHeaderService purchaseOrderHeaderService;
 
-    private PurchaseOrderDetailService(PurchaseOrderDetailRepository repository,
+    public PurchaseOrderDetailService(PurchaseOrderDetailRepository repository,
                                        @Lazy ProductManagementFeignClient productManagementService,
                                        @Lazy IPurchaseOrderHeaderService purchaseOrderHeaderService
                                        ){

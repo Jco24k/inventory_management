@@ -10,6 +10,7 @@ import com.purchase.management.mappers.MapperNotNull;
 import com.purchase.management.models.ProductModel;
 import com.purchase.management.repositories.InventoryIncomeDetailRepository;
 import com.purchase.management.services.interfaces.IInventoryIncomeDetailService;
+import com.purchase.management.services.interfaces.IInventoryIncomeHeaderService;
 import com.purchase.management.services.interfaces.IPurchaseOrderHeaderService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -21,15 +22,15 @@ public class InventoryIncomeDetailService implements IInventoryIncomeDetailServi
 
     private final InventoryIncomeDetailRepository repository;
     private final ProductManagementFeignClient productManagementService;
-    private final IPurchaseOrderHeaderService purchaseOrderHeaderService;
+    private final IInventoryIncomeHeaderService inventoryIncomeHeaderService;
 
-    private InventoryIncomeDetailService(InventoryIncomeDetailRepository repository,
+    public InventoryIncomeDetailService(InventoryIncomeDetailRepository repository,
                                          @Lazy ProductManagementFeignClient productManagementService,
-                                         @Lazy IPurchaseOrderHeaderService purchaseOrderHeaderService
+                                         @Lazy IInventoryIncomeHeaderService inventoryIncomeHeaderService
                                        ){
         this.repository = repository;
         this.productManagementService = productManagementService;
-        this.purchaseOrderHeaderService = purchaseOrderHeaderService;
+        this.inventoryIncomeHeaderService = inventoryIncomeHeaderService;
     }
 
     @Override
@@ -53,7 +54,7 @@ public class InventoryIncomeDetailService implements IInventoryIncomeDetailServi
         InventoryIncomeDetail newDetail = new InventoryIncomeDetail();
         getAndVerifyDto(requestDto,newDetail,null);
         if(inventoryIncomeHeaderId != null){
-//            newDetail.setInventoryIncomeHeader(purchaseOrderHeaderService.findOne(purchaseOrderHeaderId));
+            newDetail.setInventoryIncomeHeader(inventoryIncomeHeaderService.findOne(inventoryIncomeHeaderId));
         }
         return repository.save(newDetail);
     }
