@@ -2,7 +2,7 @@ package com.purchase.management.entities.composite;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.purchase.management.entities.PurchaseOrderHeader;
+import com.purchase.management.entities.Warehouse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,8 +23,8 @@ import java.math.BigDecimal;
 @DynamicUpdate
 @Entity
 @Table
-@IdClass(PurchaseOrderDetailPk.class)
-public class PurchaseOrderDetail implements Serializable {
+@IdClass(ProductWarehouseStockDetailPk.class)
+public class ProductWarehouseStockDetail implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -34,27 +34,13 @@ public class PurchaseOrderDetail implements Serializable {
     private Long product;
 
     @Id
-    @JoinColumn(name = "purchase_order_header_id")
+    @JoinColumn(name = "warehouse_id")
     @ManyToOne(cascade = { CascadeType.MERGE})
     @JsonManagedReference
-    @JsonIgnoreProperties("purchaseOrderDetails")
-    private PurchaseOrderHeader purchaseOrderHeader;
+    @JsonIgnoreProperties("productWarehouseDetails")
+    private Warehouse warehouse;
 
     @Column(nullable = false, columnDefinition="Decimal(10,2)")
-    private BigDecimal cost_amount;
+    private BigDecimal stock;
 
-    @Column(nullable = false, columnDefinition="Decimal(10,2)")
-    private BigDecimal quantity;
-
-    @Column(nullable = false, columnDefinition="Decimal(10,2)")
-    private BigDecimal subtotal;
-
-    @Column(nullable = true, columnDefinition="Decimal(10,2)")
-    private BigDecimal suggested_price;
-
-    @PreUpdate
-    @PrePersist
-    public void chargeTotal(){
-        subtotal = quantity.multiply(cost_amount);
-    }
 }

@@ -1,9 +1,12 @@
 package com.purchase.management.services;
 
 import com.purchase.management.dtos.create.CreateInventoryIncomeDetailDto;
+import com.purchase.management.dtos.update.UpdateInventoryIncomeDetailDto;
+import com.purchase.management.dtos.update.UpdatePurchaseOrderDetailDto;
 import com.purchase.management.entities.InventoryIncomeHeader;
 import com.purchase.management.entities.composite.InventoryIncomeDetail;
 import com.purchase.management.entities.composite.InventoryIncomeDetailPk;
+import com.purchase.management.entities.composite.PurchaseOrderDetail;
 import com.purchase.management.exception.ResourceNotFoundException;
 import com.purchase.management.feignclients.ProductManagementFeignClient;
 import com.purchase.management.mappers.MapperNotNull;
@@ -56,6 +59,14 @@ public class InventoryIncomeDetailService implements IInventoryIncomeDetailServi
         if(inventoryIncomeHeaderId != null){
             newDetail.setInventoryIncomeHeader(inventoryIncomeHeaderService.findOne(inventoryIncomeHeaderId));
         }
+        return repository.save(newDetail);
+    }
+
+    @Override
+    @Transactional()
+    public InventoryIncomeDetail update(UpdateInventoryIncomeDetailDto requestDto, Long inventoryIncomeHeaderId, Long productId) {
+        InventoryIncomeDetail newDetail = findOne(inventoryIncomeHeaderId,productId);
+        MapperNotNull.notNullMapper().map(requestDto,newDetail);
         return repository.save(newDetail);
     }
 

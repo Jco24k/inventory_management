@@ -27,7 +27,7 @@ public class BaseEntity implements Serializable {
     private Boolean isActive;
 
     @PrePersist()
-    private void insert(){
+    public void insert(){
         isActive = true;
     }
 }

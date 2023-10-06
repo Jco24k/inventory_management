@@ -25,14 +25,6 @@ public class CreatePurchaseOrderHeaderDto {
     @NotNull(message = "productId must not be null")
     private Long providerId;
 
-    @NotNull(message = "cost_amount must not be null")
-    @Min(1)
-    private BigDecimal cost_amount;
-
-    @NotNull(message = "quantity must not be null")
-    @Min(1)
-    private BigDecimal quantity;
-
     @NotNull()
     @DateTimeFormat(pattern = "yyyy-MM-dd", iso = DateTimeFormat.ISO.DATE)
     private String date_order;

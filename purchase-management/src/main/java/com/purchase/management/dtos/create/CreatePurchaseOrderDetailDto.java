@@ -17,9 +17,9 @@ public class CreatePurchaseOrderDetailDto {
     @NotNull(message = "productId must not be null")
     private Long productId;
 
-    @NotNull(message = "cost must not be null")
+    @NotNull(message = "cost_amount must not be null")
     @Min(1)
-    private BigDecimal cost;
+    private BigDecimal cost_amount;
 
     @NotNull(message = "quantity must not be null")
     @Min(1)

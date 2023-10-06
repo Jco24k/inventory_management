@@ -1,6 +1,7 @@
 package com.purchase.management.services;
 
 import com.purchase.management.dtos.create.CreatePurchaseOrderDetailDto;
+import com.purchase.management.dtos.update.UpdatePurchaseOrderDetailDto;
 import com.purchase.management.entities.PurchaseOrderHeader;
 import com.purchase.management.entities.composite.PurchaseOrderDetail;
 import com.purchase.management.entities.composite.PurchaseOrderDetailPk;
@@ -55,6 +56,14 @@ public class PurchaseOrderDetailService implements IPurchaseOrderDetailService {
         if(purchaseOrderHeaderId != null){
             newDetail.setPurchaseOrderHeader(purchaseOrderHeaderService.findOne(purchaseOrderHeaderId));
         }
+        return repository.save(newDetail);
+    }
+
+    @Override
+    @Transactional()
+    public PurchaseOrderDetail update(UpdatePurchaseOrderDetailDto requestDto, Long purchaseOrderHeaderId, Long productId) {
+        PurchaseOrderDetail newDetail = findOne(purchaseOrderHeaderId,productId);
+        MapperNotNull.notNullMapper().map(requestDto,newDetail);
         return repository.save(newDetail);
     }
 

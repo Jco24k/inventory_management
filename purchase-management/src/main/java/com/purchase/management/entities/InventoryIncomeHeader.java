@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -24,6 +25,7 @@ import java.util.Set;
 @DynamicInsert
 @DynamicUpdate
 @Setter
+@Slf4j
 @Getter
 @Entity
 @Table
@@ -46,16 +48,13 @@ public class InventoryIncomeHeader extends BaseEntity{
     private Date updatedAt;
 
     @Column(nullable = false, columnDefinition="Decimal(10,2)")
-    private BigDecimal cost_amount;
+    private BigDecimal total;
 
     @Column(name = "provider_id",nullable = false)
     private Long providerId;
 
     @Column(name = "user_id",nullable = false)
     private Long userId;
-
-    @Column(name = "change_stock", columnDefinition = "bit(1) default 1")
-    private Boolean changeStock;
 
     @OneToMany(fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST,CascadeType.MERGE }, mappedBy = "inventoryIncomeHeader" ,targetEntity = InventoryIncomeDetail.class)
     @JsonManagedReference()
@@ -66,4 +65,19 @@ public class InventoryIncomeHeader extends BaseEntity{
     @JoinColumn(name = "purchase_order_header_id")
     @JsonManagedReference()
     private PurchaseOrderHeader purchaseOrderHeader;
+
+    @PreUpdate
+    @PrePersist
+    public void chargeTotal(){
+        log.info("Verify: " + inventoryIncomeDetails.size());
+        if(inventoryIncomeDetails!=null){
+            total = inventoryIncomeDetails.stream().
+                    map(detail -> {
+                        BigDecimal subtotal = detail.getQuantity().
+                                multiply(detail.getCost_amount());
+                        detail.setSubtotal(subtotal);
+                        return  subtotal;
+                    }).reduce(BigDecimal.ZERO,BigDecimal::add);
+        }
+    }
 }

@@ -33,20 +33,9 @@ public class CreateInventoryIncomeHeaderDto {
     @NotNull(message = "purchaseOrderId must not be null")
     private Long purchaseOrderId;
 
-    @NotNull(message = "cost_amount must not be null")
-    @Min(1)
-    private BigDecimal cost_amount;
-
-    @NotNull(message = "quantity must not be null")
-    @Min(1)
-    private BigDecimal quantity;
-
     @NotNull()
     @DateTimeFormat(pattern = "yyyy-MM-dd", iso = DateTimeFormat.ISO.DATE)
     private String date_income;
-
-    @Nullable
-    private Boolean changeStock;
 
     @Nullable()
     private List<CreateInventoryIncomeDetailDto> inventoryIncomeDetailDtos = new ArrayList<>();

@@ -9,16 +9,12 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class UpdateInventoryIncomeDetailDto  extends CreateInventoryIncomeDetailDto {
+public class UpdateInventoryIncomeDetailDto {
 
-    @Min(value = 1,groups = ValidateUpdate.class)
-    private Long productId;
+    @Min(value = 1 )
+    private BigDecimal cost_amount;
 
-    @Min(value = 1 ,groups = ValidateUpdate.class)
-    private BigDecimal cost;
-
-    @Min(value = 1 ,groups = ValidateUpdate.class)
+    @Min(value = 1)
     private BigDecimal quantity;
-    public interface ValidateUpdate {
-    }
+
 }

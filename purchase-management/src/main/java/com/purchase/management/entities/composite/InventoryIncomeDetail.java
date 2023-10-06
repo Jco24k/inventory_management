@@ -42,7 +42,7 @@ public class InventoryIncomeDetail implements Serializable {
     private InventoryIncomeHeader inventoryIncomeHeader;
 
     @Column(nullable = false, columnDefinition="Decimal(10,2)")
-    private BigDecimal cost;
+    private BigDecimal cost_amount;
 
     @Column(nullable = false, columnDefinition="Decimal(10,2)")
     private BigDecimal quantity;
@@ -50,5 +50,9 @@ public class InventoryIncomeDetail implements Serializable {
     @Column(nullable = false, columnDefinition="Decimal(10,2)")
     private BigDecimal subtotal;
 
-
+    @PreUpdate
+    @PrePersist
+    public void chargeTotal(){
+        subtotal = quantity.multiply(cost_amount);
+    }
 }

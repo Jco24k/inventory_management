@@ -44,7 +44,7 @@ public class PurchaseOrderHeader extends BaseEntity{
     private Date updatedAt;
 
     @Column(nullable = false, columnDefinition="Decimal(10,2)")
-    private BigDecimal cost_amount;
+    private BigDecimal total;
 
     @Column(name = "provider_id",nullable = false)
     private Long providerId;
@@ -60,4 +60,18 @@ public class PurchaseOrderHeader extends BaseEntity{
     @OneToOne(cascade = { CascadeType.MERGE})
     @JsonBackReference()
     private InventoryIncomeHeader inventoryIncomeHeader;
+
+    @PreUpdate
+    @PrePersist
+    public void chargeTotal(){
+        if(purchaseOrderDetails!=null){
+            total = purchaseOrderDetails.stream().
+                    map(detail -> {
+                        BigDecimal subtotal = detail.getQuantity().
+                                multiply(detail.getCost_amount());
+                        detail.setSubtotal(subtotal);
+                        return  subtotal;
+                    }).reduce(BigDecimal.ZERO,BigDecimal::add);
+        }
+    }
 }
