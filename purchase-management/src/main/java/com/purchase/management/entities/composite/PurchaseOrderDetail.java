@@ -47,6 +47,9 @@ public class PurchaseOrderDetail implements Serializable {
     private BigDecimal quantity;
 
     @Column(nullable = false, columnDefinition="Decimal(10,2)")
+    private BigDecimal subtotal;
+
+    @Column(nullable = true, columnDefinition="Decimal(10,2)")
     private BigDecimal suggested_price;
 
 }

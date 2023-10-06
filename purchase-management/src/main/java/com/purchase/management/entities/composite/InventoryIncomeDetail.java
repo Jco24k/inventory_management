@@ -48,6 +48,7 @@ public class InventoryIncomeDetail implements Serializable {
     private BigDecimal quantity;
 
     @Column(nullable = false, columnDefinition="Decimal(10,2)")
-    private BigDecimal suggested_price;
+    private BigDecimal subtotal;
+
 
 }

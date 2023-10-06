@@ -14,6 +14,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -34,6 +35,7 @@ public class PurchaseOrderHeader extends BaseEntity{
     @Column(name = "created_at")
     private Date createdAt;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd", iso = DateTimeFormat.ISO.DATE)
     @Column(columnDefinition = "Date")
     private String date_order;
 
@@ -42,7 +44,7 @@ public class PurchaseOrderHeader extends BaseEntity{
     private Date updatedAt;
 
     @Column(nullable = false, columnDefinition="Decimal(10,2)")
-    private BigDecimal cost;
+    private BigDecimal cost_amount;
 
     @Column(name = "provider_id",nullable = false)
     private Long providerId;
