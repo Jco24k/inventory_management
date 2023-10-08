@@ -1,5 +1,6 @@
 package com.purchase.management.services.interfaces;
 
+import com.purchase.management.dtos.base.BaseInventoryIncomeHeaderDto;
 import com.purchase.management.dtos.create.CreateInventoryIncomeHeaderDto;
 import com.purchase.management.dtos.update.UpdateInventoryIncomeHeaderDto;
 import com.purchase.management.entities.InventoryIncomeHeader;
@@ -12,6 +13,5 @@ public interface IInventoryIncomeHeaderService {
     InventoryIncomeHeader create(CreateInventoryIncomeHeaderDto requestDto) ;
     InventoryIncomeHeader update(UpdateInventoryIncomeHeaderDto requestDto, Long id) ;
     void delete(Long id) ;
-
-    void getAndVerifyDto(CreateInventoryIncomeHeaderDto requestDto,InventoryIncomeHeader entity);
+    void getAndVerifyDto(BaseInventoryIncomeHeaderDto request, InventoryIncomeHeader entity, Boolean option);
 }

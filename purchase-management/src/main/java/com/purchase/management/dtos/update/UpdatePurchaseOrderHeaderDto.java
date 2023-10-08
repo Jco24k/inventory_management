@@ -1,15 +1,15 @@
 package com.purchase.management.dtos.update;
 
+import com.purchase.management.dtos.base.BasePurchaseOrderHeaderDto;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
-import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class UpdatePurchaseOrderHeaderDto  {
+public class UpdatePurchaseOrderHeaderDto extends BasePurchaseOrderHeaderDto {
 
     @Min(value = 1)
     @Nullable

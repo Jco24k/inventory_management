@@ -1,5 +1,6 @@
 package com.purchase.management.services.interfaces;
 
+import com.purchase.management.dtos.base.BasePurchaseOrderHeaderDto;
 import com.purchase.management.dtos.create.CreatePurchaseOrderHeaderDto;
 import com.purchase.management.dtos.update.UpdatePurchaseOrderHeaderDto;
 import com.purchase.management.entities.PurchaseOrderHeader;
@@ -11,5 +12,5 @@ public interface IPurchaseOrderHeaderService {
     PurchaseOrderHeader create(CreatePurchaseOrderHeaderDto requestDto) ;
     PurchaseOrderHeader update(UpdatePurchaseOrderHeaderDto requestDto, Long id) ;
     void delete(Long id) ;
-    void getAndVerifyDto(CreatePurchaseOrderHeaderDto requestDto,PurchaseOrderHeader entity);
+    void getAndVerifyDto(BasePurchaseOrderHeaderDto requestDto, PurchaseOrderHeader entity,Boolean option);
 }

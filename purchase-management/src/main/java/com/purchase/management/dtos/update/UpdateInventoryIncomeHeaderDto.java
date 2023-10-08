@@ -1,5 +1,6 @@
 package com.purchase.management.dtos.update;
 
+import com.purchase.management.dtos.base.BaseInventoryIncomeHeaderDto;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Min;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class UpdateInventoryIncomeHeaderDto {
+public class UpdateInventoryIncomeHeaderDto extends BaseInventoryIncomeHeaderDto {
 
     @Nullable
     @Min(value = 1)
@@ -27,6 +28,9 @@ public class UpdateInventoryIncomeHeaderDto {
     @Min(value = 1)
     private BigDecimal cost_amount;
 
+    @Nullable
+    @Min(value = 1)
+    private Long warehouseId;
 
     @Nullable
     @DateTimeFormat(pattern = "yyyy-MM-dd", iso = DateTimeFormat.ISO.DATE)

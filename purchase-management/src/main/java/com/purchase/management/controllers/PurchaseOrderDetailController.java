@@ -3,8 +3,11 @@ package com.purchase.management.controllers;
 import com.purchase.management.config.PathController;
 import com.purchase.management.dtos.create.CreatePurchaseOrderDetailDto;
 import com.purchase.management.dtos.create.CreatePurchaseOrderHeaderDto;
+import com.purchase.management.dtos.update.UpdateProductWarehouseStockDetailDto;
+import com.purchase.management.dtos.update.UpdatePurchaseOrderDetailDto;
 import com.purchase.management.dtos.update.UpdatePurchaseOrderHeaderDto;
 import com.purchase.management.entities.PurchaseOrderHeader;
+import com.purchase.management.entities.composite.ProductWarehouseStockDetail;
 import com.purchase.management.entities.composite.PurchaseOrderDetail;
 import com.purchase.management.services.interfaces.IPurchaseOrderDetailService;
 import com.purchase.management.services.interfaces.IPurchaseOrderHeaderService;
@@ -43,6 +46,13 @@ public class PurchaseOrderDetailController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(requestDto,purchaseOrderHeaderId));
     }
 
+    @PatchMapping("/{purchaseOrderHeaderId}/{productId}")
+    public ResponseEntity<PurchaseOrderDetail> patch(@PathVariable Long purchaseOrderHeaderId,
+                                                             @PathVariable Long productId,
+                                                             @RequestBody @Valid UpdatePurchaseOrderDetailDto requestDto)
+    {
+        return ResponseEntity.ok(service.update(requestDto,purchaseOrderHeaderId,productId));
+    }
 
 
 

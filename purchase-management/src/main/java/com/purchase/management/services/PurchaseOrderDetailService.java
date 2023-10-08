@@ -15,6 +15,8 @@ import com.purchase.management.services.interfaces.IPurchaseOrderHeaderService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
 import java.util.Collection;
 
 @Service
@@ -53,9 +55,10 @@ public class PurchaseOrderDetailService implements IPurchaseOrderDetailService {
     public PurchaseOrderDetail create(CreatePurchaseOrderDetailDto requestDto, Long purchaseOrderHeaderId) {
         PurchaseOrderDetail newDetail = new PurchaseOrderDetail();
         getAndVerifyDto(requestDto,newDetail,null);
-        if(purchaseOrderHeaderId != null){
-            newDetail.setPurchaseOrderHeader(purchaseOrderHeaderService.findOne(purchaseOrderHeaderId));
-        }
+        PurchaseOrderHeader purchaseOrderHeader = purchaseOrderHeaderService.findOne(purchaseOrderHeaderId);
+        BigDecimal total = updateTotal(BigDecimal.ZERO,requestDto.getQuantity().multiply(requestDto.getCost_amount()),purchaseOrderHeader.getTotal());
+        purchaseOrderHeader.setTotal(total);
+        newDetail.setPurchaseOrderHeader(purchaseOrderHeader);
         return repository.save(newDetail);
     }
 
@@ -64,6 +67,10 @@ public class PurchaseOrderDetailService implements IPurchaseOrderDetailService {
     public PurchaseOrderDetail update(UpdatePurchaseOrderDetailDto requestDto, Long purchaseOrderHeaderId, Long productId) {
         PurchaseOrderDetail newDetail = findOne(purchaseOrderHeaderId,productId);
         MapperNotNull.notNullMapper().map(requestDto,newDetail);
+        BigDecimal total = updateTotal(newDetail.getSubtotal(),newDetail.getQuantity().
+                multiply(newDetail.getCost_amount()),
+                newDetail.getPurchaseOrderHeader().getTotal());
+        newDetail.getPurchaseOrderHeader().setTotal(total);
         return repository.save(newDetail);
     }
 
@@ -78,7 +85,10 @@ public class PurchaseOrderDetailService implements IPurchaseOrderDetailService {
     }
 
 
-
+    public BigDecimal updateTotal(BigDecimal oldSubtotal , BigDecimal newSubtotal, BigDecimal total){
+        BigDecimal difference = newSubtotal.subtract(oldSubtotal);
+        return total.add(difference);
+    }
 
 
 }

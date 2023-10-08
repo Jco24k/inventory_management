@@ -3,6 +3,9 @@ package com.purchase.management.controllers;
 import com.purchase.management.config.PathController;
 import com.purchase.management.dtos.create.CreateInventoryIncomeDetailDto;
 import com.purchase.management.dtos.create.CreatePurchaseOrderDetailDto;
+import com.purchase.management.dtos.update.UpdateInventoryIncomeDetailDto;
+import com.purchase.management.dtos.update.UpdateInventoryIncomeHeaderDto;
+import com.purchase.management.entities.InventoryIncomeHeader;
 import com.purchase.management.entities.composite.InventoryIncomeDetail;
 import com.purchase.management.entities.composite.PurchaseOrderDetail;
 import com.purchase.management.services.interfaces.IInventoryIncomeDetailService;
@@ -42,7 +45,13 @@ public class InventoryIncomeDetailController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(requestDto,inventoryIncomeHeaderId));
     }
 
-
+    @PatchMapping("/{inventoryIncomeHeaderId}/{productId}")
+    public ResponseEntity<InventoryIncomeDetail> patch(@PathVariable Long inventoryIncomeHeaderId,
+                                                       @PathVariable Long productId,
+                                                       @RequestBody @Valid UpdateInventoryIncomeDetailDto requestDto)
+    {
+        return ResponseEntity.ok(service.update(requestDto,inventoryIncomeHeaderId,productId));
+    }
 
 
 

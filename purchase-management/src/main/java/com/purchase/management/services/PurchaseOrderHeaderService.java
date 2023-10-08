@@ -1,5 +1,8 @@
 package com.purchase.management.services;
 
+import com.purchase.management.dtos.base.BasePurchaseOrderHeaderDto;
+import com.purchase.management.dtos.create.CreateInventoryIncomeHeaderDto;
+import com.purchase.management.dtos.create.CreatePurchaseOrderDetailDto;
 import com.purchase.management.dtos.create.CreatePurchaseOrderHeaderDto;
 import com.purchase.management.dtos.update.UpdatePurchaseOrderHeaderDto;
 import com.purchase.management.entities.PurchaseOrderHeader;
@@ -20,6 +23,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -60,7 +64,7 @@ public class PurchaseOrderHeaderService implements IPurchaseOrderHeaderService {
     @Transactional()
     public PurchaseOrderHeader create(CreatePurchaseOrderHeaderDto requestDto) {
         PurchaseOrderHeader newData = new PurchaseOrderHeader();
-        getAndVerifyDto(requestDto,newData);
+        getAndVerifyDto(requestDto,newData,true);
         return repository.save(newData);
     }
 
@@ -68,7 +72,7 @@ public class PurchaseOrderHeaderService implements IPurchaseOrderHeaderService {
     @Transactional()
     public PurchaseOrderHeader update(UpdatePurchaseOrderHeaderDto requestDto, Long id) {
         PurchaseOrderHeader dataFound = findOne(id);
-        modelMapperWithoutFks().map(requestDto,dataFound);
+        getAndVerifyDto(requestDto,dataFound,false);
         return repository.save(dataFound);
     }
 
@@ -94,7 +98,7 @@ public class PurchaseOrderHeaderService implements IPurchaseOrderHeaderService {
     }
 
     @Override
-    public void getAndVerifyDto(CreatePurchaseOrderHeaderDto requestDto,PurchaseOrderHeader entity){
+    public void getAndVerifyDto(BasePurchaseOrderHeaderDto requestDto, PurchaseOrderHeader entity, Boolean option){
         modelMapperWithoutFks().map(requestDto, entity);
         if(requestDto.getProviderId()!=null){
             ProviderModel providerModel = productManagementService.findOneProvider(requestDto.getProviderId()) ;
@@ -104,14 +108,18 @@ public class PurchaseOrderHeaderService implements IPurchaseOrderHeaderService {
             UserModel userModel = userService.findOne(requestDto.getUserId());
             entity.setUserId(userModel.getId());
         }
-        if(requestDto.getPurchaseDetailDtos()!=null){
+        if(option){
+
+            CreatePurchaseOrderHeaderDto createDto = (CreatePurchaseOrderHeaderDto) requestDto;
             entity.getPurchaseOrderDetails().clear();
-            Set<PurchaseOrderDetail> purchaseOrderDetails =
-                    requestDto.getPurchaseDetailDtos().stream().map(
-                            purchaseDetail -> purchaseOrderDetailService.getAndVerifyDto(purchaseDetail,
-                                    new PurchaseOrderDetail(),entity)
-                    ).collect(Collectors.toSet());
-            entity.setPurchaseOrderDetails(purchaseOrderDetails);
+            if(createDto.getPurchaseDetailDtos()!=null){
+                Set<PurchaseOrderDetail> purchaseOrderDetails =
+                        createDto.getPurchaseDetailDtos().stream().map(
+                                purchaseDetail -> purchaseOrderDetailService.getAndVerifyDto(purchaseDetail,
+                                        new PurchaseOrderDetail(),entity)
+                        ).collect(Collectors.toSet());
+                entity.setPurchaseOrderDetails(purchaseOrderDetails);
+            }
         }
     }
 }

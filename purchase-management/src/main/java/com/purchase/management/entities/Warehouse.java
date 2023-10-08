@@ -1,8 +1,10 @@
 package com.purchase.management.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.purchase.management.entities.composite.InventoryIncomeDetail;
 import com.purchase.management.entities.composite.ProductWarehouseStockDetail;
 import jakarta.persistence.*;
 import lombok.*;
@@ -32,8 +34,10 @@ public class Warehouse extends BaseEntity {
     private String address;
 
     @OneToMany(fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST,CascadeType.MERGE }, mappedBy = "warehouse" ,targetEntity = ProductWarehouseStockDetail.class)
-    @JsonManagedReference()
-    @JsonIgnoreProperties("warehouse")
+    @JsonBackReference()
     private Set<ProductWarehouseStockDetail> productWarehouseStockDetails = new HashSet<>();
 
+    @OneToMany(fetch = FetchType.EAGER,cascade = {CascadeType.MERGE }, mappedBy = "warehouse" ,targetEntity = InventoryIncomeHeader.class)
+    @JsonBackReference()
+    private Set<InventoryIncomeHeader> inventoryIncomeHeaders = new HashSet<>();
 }

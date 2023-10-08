@@ -1,5 +1,6 @@
 package com.purchase.management.dtos.create;
 
+import com.purchase.management.dtos.base.BaseInventoryIncomeHeaderDto;
 import com.purchase.management.entities.enums.EIncomeType;
 import jakarta.annotation.Nullable;
 import jakarta.validation.GroupSequence;
@@ -8,15 +9,13 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
 @GroupSequence({ CreateInventoryIncomeHeaderDto.class, CreateInventoryIncomeHeaderDto.ValidateUpdate.class })
-public class CreateInventoryIncomeHeaderDto {
+public class CreateInventoryIncomeHeaderDto extends BaseInventoryIncomeHeaderDto {
 
     @NotNull(message = "type must not be null")
     private EIncomeType type;
@@ -30,8 +29,11 @@ public class CreateInventoryIncomeHeaderDto {
     private Long providerId;
 
     @Min(1)
-    @NotNull(message = "purchaseOrderId must not be null")
     private Long purchaseOrderId;
+
+    @Min(1)
+    @NotNull(message = "warehouseId must not be null")
+    private Long warehouseId;
 
     @NotNull()
     @DateTimeFormat(pattern = "yyyy-MM-dd", iso = DateTimeFormat.ISO.DATE)

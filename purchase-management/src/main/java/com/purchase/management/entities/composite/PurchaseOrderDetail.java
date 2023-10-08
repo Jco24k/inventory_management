@@ -29,16 +29,18 @@ public class PurchaseOrderDetail implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+
+    @Id
+    @JoinColumn(name = "purchase_order_header_id")
+    @ManyToOne(cascade = { CascadeType.PERSIST,CascadeType.MERGE})
+    @JsonManagedReference
+    @JsonIgnoreProperties("purchaseOrderDetails")
+    private PurchaseOrderHeader purchaseOrderHeader;
+
     @Id
     @JoinColumn(name = "product_id")
     private Long product;
 
-    @Id
-    @JoinColumn(name = "purchase_order_header_id")
-    @ManyToOne(cascade = { CascadeType.MERGE})
-    @JsonManagedReference
-    @JsonIgnoreProperties("purchaseOrderDetails")
-    private PurchaseOrderHeader purchaseOrderHeader;
 
     @Column(nullable = false, columnDefinition="Decimal(10,2)")
     private BigDecimal cost_amount;

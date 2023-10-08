@@ -1,8 +1,10 @@
 package com.purchase.management.services;
 
+import com.purchase.management.dtos.base.BaseInventoryIncomeHeaderDto;
 import com.purchase.management.dtos.create.CreateInventoryIncomeHeaderDto;
 import com.purchase.management.dtos.update.UpdateInventoryIncomeHeaderDto;
 import com.purchase.management.entities.InventoryIncomeHeader;
+import com.purchase.management.entities.Warehouse;
 import com.purchase.management.entities.composite.InventoryIncomeDetail;
 import com.purchase.management.exception.ResourceNotFoundException;
 import com.purchase.management.feignclients.ProductManagementFeignClient;
@@ -13,6 +15,7 @@ import com.purchase.management.models.UserModel;
 import com.purchase.management.repositories.InventoryIncomeHeaderRepository;
 import com.purchase.management.services.interfaces.IInventoryIncomeDetailService;
 import com.purchase.management.services.interfaces.IInventoryIncomeHeaderService;
+import com.purchase.management.services.interfaces.IWarehouseService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -29,15 +32,18 @@ public class InventoryIncomeHeaderService implements IInventoryIncomeHeaderServi
 
     private final InventoryIncomeHeaderRepository repository;
     private final ProductManagementFeignClient productManagementService;
+    private final IWarehouseService warehouseService;
     private final IInventoryIncomeDetailService inventoryIncomeDetailService;
     private final UserRestTemplate userService;
 
     public InventoryIncomeHeaderService(InventoryIncomeHeaderRepository repository,
                                         UserRestTemplate userService,
+                                        IWarehouseService warehouseService,
                                         @Lazy ProductManagementFeignClient productManagementService,
                                         @Lazy IInventoryIncomeDetailService inventoryIncomeDetailService) {
         this.repository = repository;
         this.userService = userService;
+        this.warehouseService = warehouseService;
         this.productManagementService = productManagementService;
         this.inventoryIncomeDetailService = inventoryIncomeDetailService;
     }
@@ -60,7 +66,7 @@ public class InventoryIncomeHeaderService implements IInventoryIncomeHeaderServi
     @Transactional()
     public InventoryIncomeHeader create(CreateInventoryIncomeHeaderDto requestDto) {
         InventoryIncomeHeader newData = new InventoryIncomeHeader();
-        getAndVerifyDto(requestDto,newData);
+        getAndVerifyDto(requestDto,newData,true);
         return repository.save(newData);
     }
 
@@ -68,7 +74,7 @@ public class InventoryIncomeHeaderService implements IInventoryIncomeHeaderServi
     @Transactional()
     public InventoryIncomeHeader update(UpdateInventoryIncomeHeaderDto requestDto, Long id) {
         InventoryIncomeHeader dataFound = findOne(id);
-        modelMapperWithoutFks().map(requestDto,dataFound);
+        getAndVerifyDto(requestDto,dataFound,false);
         return repository.save(dataFound);
     }
 
@@ -87,6 +93,7 @@ public class InventoryIncomeHeaderService implements IInventoryIncomeHeaderServi
                          skip().setInventoryIncomeDetails(null);
                          skip().setProviderId(null);
                          skip().setUserId(null);
+                         skip().setWarehouse(null);
                      }
                  };
         modelMapper.addMappings(propertyMap);
@@ -94,24 +101,32 @@ public class InventoryIncomeHeaderService implements IInventoryIncomeHeaderServi
     }
 
     @Override
-    public void getAndVerifyDto(CreateInventoryIncomeHeaderDto requestDto,InventoryIncomeHeader entity){
+    public void getAndVerifyDto(BaseInventoryIncomeHeaderDto requestDto, InventoryIncomeHeader entity, Boolean option){
         modelMapperWithoutFks().map(requestDto, entity);
         if(requestDto.getProviderId()!=null){
             ProviderModel providerModel = productManagementService.findOneProvider(requestDto.getProviderId()) ;
             entity.setProviderId(providerModel.getId());
         }
+        if(requestDto.getWarehouseId()!=null){
+            Warehouse warehouse = warehouseService.findOne(requestDto.getWarehouseId());
+            entity.setWarehouse(warehouse);
+        }
         if(requestDto.getUserId()!=null) {
             UserModel userModel = userService.findOne(requestDto.getUserId());
             entity.setUserId(userModel.getId());
         }
-        if(requestDto.getInventoryIncomeDetailDtos()!=null){
-            entity.getInventoryIncomeDetails().clear();
-            Set<InventoryIncomeDetail> inventoryIncomeDetails =
-                    requestDto.getInventoryIncomeDetailDtos().stream().map(
-                            inventoryDetail -> inventoryIncomeDetailService.getAndVerifyDto(inventoryDetail,
-                                    new InventoryIncomeDetail(),entity)
-                    ).collect(Collectors.toSet());
-            entity.setInventoryIncomeDetails(inventoryIncomeDetails);
+        if(option){
+            CreateInventoryIncomeHeaderDto request = (CreateInventoryIncomeHeaderDto) requestDto;
+            if(request.getInventoryIncomeDetailDtos()!=null){
+                entity.getInventoryIncomeDetails().clear();
+                Set<InventoryIncomeDetail> inventoryIncomeDetails =
+                        request.getInventoryIncomeDetailDtos().stream().map(
+                                inventoryDetail -> inventoryIncomeDetailService.getAndVerifyDto(inventoryDetail,
+                                        new InventoryIncomeDetail(),entity)
+                        ).collect(Collectors.toSet());
+                entity.setInventoryIncomeDetails(inventoryIncomeDetails);
+            }
         }
+
     }
 }

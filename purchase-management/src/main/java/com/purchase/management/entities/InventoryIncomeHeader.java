@@ -56,15 +56,21 @@ public class InventoryIncomeHeader extends BaseEntity{
     @Column(name = "user_id",nullable = false)
     private Long userId;
 
-    @OneToMany(fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST,CascadeType.MERGE }, mappedBy = "inventoryIncomeHeader" ,targetEntity = InventoryIncomeDetail.class)
+    @OneToMany(fetch = FetchType.EAGER,cascade = { CascadeType.PERSIST,CascadeType.MERGE }, mappedBy = "inventoryIncomeHeader" ,targetEntity = InventoryIncomeDetail.class)
     @JsonManagedReference()
     @JsonIgnoreProperties("inventoryIncomeHeader")
     private Set<InventoryIncomeDetail> inventoryIncomeDetails = new HashSet<>();
 
-    @OneToOne(cascade = { CascadeType.MERGE})
+    @OneToOne(cascade = { CascadeType.MERGE })
     @JoinColumn(name = "purchase_order_header_id")
     @JsonManagedReference()
     private PurchaseOrderHeader purchaseOrderHeader;
+
+    @ManyToOne(cascade = { CascadeType.MERGE } , targetEntity = Warehouse.class)
+    @JoinColumn(name = "warehouse_id")
+    @JsonManagedReference
+    private Warehouse warehouse;
+
 
     @PreUpdate
     @PrePersist
