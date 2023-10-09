@@ -29,3 +29,12 @@ spring:
     jpa:
       repositories:
         enabled: true
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      default-zone: http://localhost:9003/eureka
+    instance:
+      hostname: localhost
