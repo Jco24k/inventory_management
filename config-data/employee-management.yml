@@ -1,5 +1,5 @@
 server:
-  port: ${PORT}
+  port: 9091
   servlet:
     context-path: /api
 springdoc:
@@ -10,8 +10,6 @@ springdoc:
     path: /doc
   pathsToMatch: /**
 spring:
-  config:
-    import: optional:file:.env[.properties]
   datasource:
     url: jdbc:mysql://localhost:3306/db_employee?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: root

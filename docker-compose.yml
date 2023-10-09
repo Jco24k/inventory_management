@@ -1,0 +1,263 @@
+version: "3.8"
+
+services:
+  app_config_server:
+    build:
+      context: ./config-server
+      dockerfile: Dockerfile
+    container_name: config_server
+    volumes:
+      - ~/.m2/repository:/root/.m2/repository
+    networks:
+      - net_config_server
+    ports:
+      - "9090:9090"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.30"
+          memory: 250M
+        reservations:
+          cpus: "0.1"
+          memory: 128M
+
+  app_eureka_service:
+    build:
+      context: ./eureka-service
+      dockerfile: Dockerfile
+    container_name: eureka_service
+    volumes:
+      - ~/.m2/repository:/root/.m2/repository
+    networks:
+      - net_config_server
+    depends_on:
+      - app_config_server
+    ports:
+      - "8761:8761"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.30"
+          memory: 250M
+        reservations:
+          cpus: "0.1"
+          memory: 128M
+
+
+
+  db_employee_management:
+    image: mysql:8.1.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db_employee_management
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    restart: always
+    ports:
+      - "3306:3306"
+    container_name: db_employee_management
+    volumes:
+      - ./db_employee_management/mysql_data:/var/lib/mysql
+    networks:
+      - net_employee
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin:5.2.1-fpm-alpine
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+    ports:
+      - "8080:80"
+    networks:
+      - net_employee
+      - net_purchase
+    depends_on:
+      - db_employee_management
+      - db_purchase_management
+
+  app_employee_management:
+    build:
+      context: ./employee-management
+      dockerfile: Dockerfile
+    container_name: employee_management
+    volumes:
+      -  ~/.m2/repository:/root/.m2/repository
+    networks:
+      - net_employee
+      - net_config_server
+    depends_on:
+      - db_employee_management
+      - app_config_server
+      - app_eureka_service
+    ports:
+      - "9091:9091"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.30"
+          memory: 250M
+        reservations:
+          cpus: "0.1"
+          memory: 128M
+
+
+  db_product_management:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=db_product
+      - LANG=en_US.utf8
+      - LC_ALL=en_US.utf8
+    container_name: db_product_management
+    volumes:
+      - ./db_product_management/pg_data:/var/lib/postgresql/data:rw
+    networks:
+      - net_product
+    ports:
+      - "5432:5432"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.10"
+          memory: 180M
+        reservations:
+          cpus: "0.1"
+          memory: 128M
+  db_manager:
+    container_name: db_manager
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+    volumes:
+      - ./db_product_management/db_manager:/root/.pgadmin
+    ports:
+      - '${PGADMIN_PORT:-5050}:80'
+    networks:
+      - net_product
+    depends_on:
+      - db_product_management
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.30"
+          memory: 220M
+        reservations:
+          cpus: "0.1"
+          memory: 128M
+  app_product_management:
+    build:
+      context: ./product-management
+      dockerfile: Dockerfile
+    container_name: product_management
+    volumes:
+      -  ~/.m2/repository:/root/.m2/repository
+    networks:
+      - net_product
+      - net_config_server
+    depends_on:
+      - db_product_management
+      - app_config_server
+      - app_eureka_service
+    ports:
+      - "9092:9092"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.30"
+          memory: 250M
+        reservations:
+          cpus: "0.1"
+          memory: 128M
+
+
+
+
+  db_purchase_management:
+    image: mysql:8.1.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db_purchase_management
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    restart: always
+    ports:
+      - "3307:3306"
+    container_name: db_purchase_management
+    volumes:
+      - ./db_purchase_management/mysql_data:/var/lib/mysql
+    networks:
+      - net_purchase
+
+  app_purchase_management:
+    build:
+      context: ./purchase-management
+      dockerfile: Dockerfile
+    container_name: purchase_management
+    volumes:
+      -  ~/.m2/repository:/root/.m2/repository
+    networks:
+      - net_purchase
+      - net_config_server
+    depends_on:
+      - db_purchase_management
+      - app_config_server
+      - app_eureka_service
+    ports:
+      - "9093:9093"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.30"
+          memory: 250M
+        reservations:
+          cpus: "0.1"
+          memory: 128M
+
+
+
+networks:
+  net_config_server:
+    driver: bridge
+    driver_opts:
+      com.docker.netwwork.enable_ipv6: "true"
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.0.1/24
+          gateway: 192.168.0.1
+
+  net_employee:
+    driver: bridge
+    driver_opts:
+      com.docker.netwwork.enable_ipv6: "true"
+    ipam:
+      driver: default
+      config:
+        -
+          subnet: 192.168.1.1/24
+          gateway: 192.168.1.1
+
+  net_product:
+    driver: bridge
+    driver_opts:
+      com.docker.netwwork.enable_ipv6: "true"
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.2.1/24
+          gateway: 192.168.2.1
+
+  net_purchase:
+    driver: bridge
+    driver_opts:
+      com.docker.netwwork.enable_ipv6: "true"
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.3.1/24
+          gateway: 192.168.3.1
