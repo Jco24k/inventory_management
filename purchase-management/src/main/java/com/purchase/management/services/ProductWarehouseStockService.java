@@ -41,11 +41,14 @@ public class ProductWarehouseStockService implements IProductWarehouseStockDetai
 
     @Override
     @Transactional(readOnly = true)
-    public ProductWarehouseStockDetail findOne(Long productId, Long warehouseId ) {
+    public ProductWarehouseStockDetail findOne(Long productId, Long warehouseId, Boolean error) {
+
         ProductWarehouseStockDetailPk newId = new ProductWarehouseStockDetailPk(productId,warehouseId);
-        return repository.findById(newId).orElseThrow(
-                () -> new ResourceNotFoundException("ProductWarehouseStockDetail not found with id: " + newId)
-        );
+        ProductWarehouseStockDetail productWarehouseStockDetail =  repository.findById(newId).orElse(null);
+        if(error && productWarehouseStockDetail == null){
+            throw new ResourceNotFoundException("ProductWarehouseStockDetail not found with id: " + newId);
+        }
+        return productWarehouseStockDetail;
     }
 
     @Override
@@ -63,7 +66,7 @@ public class ProductWarehouseStockService implements IProductWarehouseStockDetai
     @Override
     @Transactional()
     public ProductWarehouseStockDetail update(UpdateProductWarehouseStockDetailDto requestDto,Long productId, Long warehouseId) {
-        ProductWarehouseStockDetail newDetail = findOne(productId,warehouseId);
+        ProductWarehouseStockDetail newDetail = findOne(productId,warehouseId,true);
         MapperNotNull.notNullMapper().map(requestDto,newDetail);
         return repository.save(newDetail);
     }

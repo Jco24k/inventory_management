@@ -36,7 +36,7 @@ public class InventoryIncomeDetail implements Serializable {
 
     @Id
     @JoinColumn(name = "inventory_income_header_id")
-    @ManyToOne(cascade = { CascadeType.MERGE})
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE})
     @JsonManagedReference
     @JsonIgnoreProperties("inventoryIncomeDetails")
     private InventoryIncomeHeader inventoryIncomeHeader;

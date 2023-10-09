@@ -34,7 +34,7 @@ public class ProductWarehouseStockDetailController {
     @GetMapping("/{productId}/{warehouseId}")
     public ResponseEntity<ProductWarehouseStockDetail> search(@PathVariable Long productId,
                                                       @PathVariable Long warehouseId) {
-        return ResponseEntity.ok(service.findOne(productId,productId));
+        return ResponseEntity.ok(service.findOne(productId,productId,true));
     }
 
     @PostMapping

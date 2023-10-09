@@ -66,8 +66,8 @@ public class InventoryIncomeHeader extends BaseEntity{
     @JsonManagedReference()
     private PurchaseOrderHeader purchaseOrderHeader;
 
-    @ManyToOne(cascade = { CascadeType.MERGE } , targetEntity = Warehouse.class)
-    @JoinColumn(name = "warehouse_id")
+    @ManyToOne(cascade = { CascadeType.PERSIST,CascadeType.MERGE } , targetEntity = Warehouse.class)
+    @JoinColumn(name = "warehouse_id", nullable = false)
     @JsonManagedReference
     private Warehouse warehouse;
 

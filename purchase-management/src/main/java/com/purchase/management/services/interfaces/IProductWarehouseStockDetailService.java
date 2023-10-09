@@ -7,7 +7,7 @@ import java.util.Collection;
 
 public interface IProductWarehouseStockDetailService {
     Collection<ProductWarehouseStockDetail> findAll();
-    ProductWarehouseStockDetail findOne(Long productId, Long warehouseId );
+    ProductWarehouseStockDetail findOne(Long productId, Long warehouseId , Boolean error);
     ProductWarehouseStockDetail create(CreateProductWarehouseStockDetailDto requestDto, Long productId) ;
     ProductWarehouseStockDetail update(UpdateProductWarehouseStockDetailDto requestDto,Long productId, Long warehouseId );
 }

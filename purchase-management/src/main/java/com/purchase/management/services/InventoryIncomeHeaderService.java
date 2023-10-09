@@ -6,6 +6,7 @@ import com.purchase.management.dtos.update.UpdateInventoryIncomeHeaderDto;
 import com.purchase.management.entities.InventoryIncomeHeader;
 import com.purchase.management.entities.Warehouse;
 import com.purchase.management.entities.composite.InventoryIncomeDetail;
+import com.purchase.management.entities.enums.EIncomeType;
 import com.purchase.management.exception.ResourceNotFoundException;
 import com.purchase.management.feignclients.ProductManagementFeignClient;
 import com.purchase.management.feignclients.UserRestTemplate;
@@ -23,6 +24,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -65,6 +67,7 @@ public class InventoryIncomeHeaderService implements IInventoryIncomeHeaderServi
     @Override
     @Transactional()
     public InventoryIncomeHeader create(CreateInventoryIncomeHeaderDto requestDto) {
+        validateTypeIncomeInventory(requestDto.getType(), requestDto.getPurchaseOrderId());
         InventoryIncomeHeader newData = new InventoryIncomeHeader();
         getAndVerifyDto(requestDto,newData,true);
         return repository.save(newData);
@@ -73,6 +76,7 @@ public class InventoryIncomeHeaderService implements IInventoryIncomeHeaderServi
     @Override
     @Transactional()
     public InventoryIncomeHeader update(UpdateInventoryIncomeHeaderDto requestDto, Long id) {
+        validateTypeIncomeInventory(requestDto.getType(), requestDto.getPurchaseOrderId());
         InventoryIncomeHeader dataFound = findOne(id);
         getAndVerifyDto(requestDto,dataFound,false);
         return repository.save(dataFound);
@@ -128,5 +132,17 @@ public class InventoryIncomeHeaderService implements IInventoryIncomeHeaderServi
             }
         }
 
+    }
+
+    void validateTypeIncomeInventory(EIncomeType type,Long purchaseOrderId){
+        if (Objects.requireNonNull(type) == EIncomeType.PURCHASE) {
+            if (purchaseOrderId == null) {
+                throw new IllegalArgumentException("PurchaseOrderId must be not null for PURCHASE type");
+            }
+        } else {
+            if (purchaseOrderId != null) {
+                throw new IllegalArgumentException("PurchaseOrderId must be null for non-PURCHASE type");
+            }
+        }
     }
 }
