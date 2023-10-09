@@ -1,0 +1,12 @@
+server:
+  port: 9089
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          default-label: main
+          uri: https://github.com/Jco24k/inventory_management
+          search-paths: config-data
+  application:
+    name: config-server
