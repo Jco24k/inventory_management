@@ -19,12 +19,12 @@ spring:
         - id: employee-management
           uri: lb://employee-management
           predicates:
-            - Path=/api/**
+            - Path=/employee-management/**
         - id: product-management
           uri: lb://product-management
           predicates:
-            - Path=/api/**
+            - Path=/product-management/**
         - id: purchase-management
           uri: lb://purchase-management
           predicates:
-            - Path=/api/**
+            - Path=/purchase-management/**
