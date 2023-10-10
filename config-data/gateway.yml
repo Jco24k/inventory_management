@@ -21,16 +21,16 @@ spring:
           predicates:
             - Path=/api/employee-management/**
           filters:
-            - RewritePath=/api/employee-management/(?<segment>.*), /api/$\{segment}
+            - RewritePath=/api/employee-management/(?<segment>.*), /employee/$\{segment}
         - id: product-management
           uri: lb://product-management
           predicates:
             - Path=/api/product-management/**
           filters:
-            - RewritePath=/api/product-management/(?<segment>.*), /api/$\{segment}
+            - RewritePath=/api/product-management/(?<segment>.*), /product/$\{segment}
         - id: purchase-management
           uri: lb://purchase-management
           predicates:
             - Path=/api/purchase-management/**
           filters:
-            - RewritePath=/api/purchase-management/(?<segment>.*), /api/$\{segment}
+            - RewritePath=/api/purchase-management/(?<segment>.*), /purchase/$\{segment}

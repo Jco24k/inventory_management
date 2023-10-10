@@ -1,7 +1,7 @@
 server:
   port: 9091
   servlet:
-    context-path: /api
+    context-path: /employee
 springdoc:
   api-docs:
     enabled: true
