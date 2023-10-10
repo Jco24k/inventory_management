@@ -5,7 +5,7 @@ COPY . .
 RUN mvn clean install package -DskipTests
 
 
-FROM openjdk:17-jre-slim
+FROM openjdk:22-ea-17-jdk-slim
 WORKDIR /usr/app
 COPY --from=build ["/usr/app/target/*.jar" ,"./"]
 EXPOSE 9091
