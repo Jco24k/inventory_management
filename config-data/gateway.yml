@@ -25,10 +25,12 @@ spring:
         - id: product-management
           uri: lb://product-management
           predicates:
-            - Path=/product-management/**
+            - Path=/api/product-management/**
           filters:
             - RewritePath=/api/product-management/(?<segment>.*), /api/$\{segment}
         - id: purchase-management
           uri: lb://purchase-management
           predicates:
-            - Path=/purchase-management/**
+            - Path=/api/purchase-management/**
+          filters:
+            - RewritePath=/api/purchase-management/(?<segment>.*), /api/$\{segment}
