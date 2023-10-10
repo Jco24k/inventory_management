@@ -8,6 +8,6 @@ RUN mvn clean package -DskipTests
 FROM openjdk:22-ea-17-jdk-slim
 WORKDIR /usr/app
 COPY --from=build ["/usr/app/target/*.jar" ,"./app.jar"]
-EXPOSE 9090
+EXPOSE 9093
 ENTRYPOINT ["java", "-jar"]
 CMD ["app.jar"]
