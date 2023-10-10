@@ -5,7 +5,7 @@ services:
     build:
       context: ./config-server
       dockerfile: Dockerfile
-    container_name: configserver
+    container_name: config-server
     volumes:
       - ~/.m2/repository:/root/.m2/repository
     networks:
