@@ -2,7 +2,7 @@ FROM maven:3.8-openjdk-17-slim AS build
 
 WORKDIR /usr/app
 COPY . .
-RUN mvn clean install package -DskipTests
+RUN mvn clean package -DskipTests
 
 
 FROM openjdk:22-ea-17-jdk-slim
