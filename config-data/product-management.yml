@@ -12,7 +12,7 @@ springdoc:
   pathsToMatch: /**
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/db_product
+    url: jdbc:postgresql://db_product_management:5432/db_product
     username: root
     password: root
     driver-class-name: org.postgresql.Driver

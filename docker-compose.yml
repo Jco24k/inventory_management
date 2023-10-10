@@ -5,7 +5,7 @@ services:
     build:
       context: ./config-server
       dockerfile: Dockerfile
-    container_name: config_server
+    container_name: configserver
     volumes:
       - ~/.m2/repository:/root/.m2/repository
     networks:
@@ -25,7 +25,7 @@ services:
     build:
       context: ./eureka-service
       dockerfile: Dockerfile
-    container_name: eureka_service
+    container_name: eureka
     volumes:
       - ~/.m2/repository:/root/.m2/repository
     networks:
@@ -78,7 +78,7 @@ services:
     build:
       context: ./employee-management
       dockerfile: Dockerfile
-    container_name: employee_management
+    container_name: employee
     volumes:
       -  ~/.m2/repository:/root/.m2/repository
     networks:
@@ -151,7 +151,7 @@ services:
     build:
       context: ./product-management
       dockerfile: Dockerfile
-    container_name: product_management
+    container_name: product
     volumes:
       -  ~/.m2/repository:/root/.m2/repository
     networks:
@@ -193,7 +193,7 @@ services:
     build:
       context: ./purchase-management
       dockerfile: Dockerfile
-    container_name: purchase_management
+    container_name: purchase
     volumes:
       -  ~/.m2/repository:/root/.m2/repository
     networks:
