@@ -50,8 +50,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: db_employee_management
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
     restart: always
     ports:
       - "3306:3306"
@@ -182,8 +180,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: db_purchase_management
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
     restart: always
     ports:
       - "3307:3306"
