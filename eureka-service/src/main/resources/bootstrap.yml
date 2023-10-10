@@ -4,4 +4,4 @@ spring:
   cloud:
     config:
       enabled: true
-      uri: http://configserver:9090
+      uri: http://config-server:9090
