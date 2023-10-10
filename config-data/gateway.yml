@@ -19,7 +19,9 @@ spring:
         - id: employee-management
           uri: lb://employee-management
           predicates:
-            - Path=/employee-management/**
+            - Path=/api/employee-management/**
+          filters:
+            - RewritePath=/api/employee-management/(?<segment>.*), /api/$\{segment}
         - id: product-management
           uri: lb://product-management
           predicates:
