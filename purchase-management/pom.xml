@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.purchase</groupId>
-	<artifactId>purchase</artifactId>
+	<artifactId>purchase-management</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>purchase-management</name>
 	<description>Project to manage purchase</description>
