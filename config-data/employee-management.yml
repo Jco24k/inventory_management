@@ -12,6 +12,7 @@ springdoc:
 spring:
   application:
     zipkin: http://localhost:9411
+  output.ansi.enabled: ALWAYS
   datasource:
     url: jdbc:mysql://localhost:3306/db_employee_management?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: root
