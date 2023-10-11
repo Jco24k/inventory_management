@@ -2,14 +2,10 @@ package com.purchase.management.controllers;
 
 import com.purchase.management.config.PathController;
 import com.purchase.management.dtos.create.CreateInventoryIncomeDetailDto;
-import com.purchase.management.dtos.create.CreatePurchaseOrderDetailDto;
 import com.purchase.management.dtos.update.UpdateInventoryIncomeDetailDto;
-import com.purchase.management.dtos.update.UpdateInventoryIncomeHeaderDto;
-import com.purchase.management.entities.InventoryIncomeHeader;
 import com.purchase.management.entities.composite.InventoryIncomeDetail;
-import com.purchase.management.entities.composite.PurchaseOrderDetail;
 import com.purchase.management.services.interfaces.IInventoryIncomeDetailService;
-import com.purchase.management.services.interfaces.IPurchaseOrderDetailService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +34,7 @@ public class InventoryIncomeDetailController {
         return ResponseEntity.ok(service.findOne(inventoryIncomeHeaderId,productId));
     }
 
+    @CircuitBreaker(name = "productCB", fallbackMethod = "fallBackSaveDetail")
     @PostMapping
     public ResponseEntity<InventoryIncomeDetail> save(@Valid @RequestBody
                                                           CreateInventoryIncomeDetailDto requestDto,
@@ -53,6 +50,12 @@ public class InventoryIncomeDetailController {
         return ResponseEntity.ok(service.update(requestDto,inventoryIncomeHeaderId,productId));
     }
 
+
+    private ResponseEntity<InventoryIncomeDetail> fallBackSaveDetail(@Valid @RequestBody
+                                                                     CreateInventoryIncomeDetailDto requestDto,
+                                                                     @RequestParam(value = "inventoryIncomeHeaderId", required = true) Long inventoryIncomeHeaderId, RuntimeException e) {
+        return new ResponseEntity("Service failed - ProductManagement", HttpStatus.OK);
+    }
 
 
 }

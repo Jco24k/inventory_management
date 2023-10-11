@@ -5,13 +5,13 @@ import com.purchase.management.dtos.create.CreatePurchaseOrderHeaderDto;
 import com.purchase.management.dtos.update.UpdatePurchaseOrderHeaderDto;
 import com.purchase.management.entities.PurchaseOrderHeader;
 import com.purchase.management.services.interfaces.IPurchaseOrderHeaderService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Collection;
 
 @RestController
@@ -32,6 +32,7 @@ public class PurchaseOrderHeaderController {
         return ResponseEntity.ok(service.findOne(id));
     }
 
+    @CircuitBreaker(name = "allCB", fallbackMethod = "fallBackSaveOrderHeader")
     @PostMapping
     public ResponseEntity<PurchaseOrderHeader> save(@Valid @RequestBody CreatePurchaseOrderHeaderDto requestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(requestDto));
@@ -50,7 +51,9 @@ public class PurchaseOrderHeaderController {
         return ResponseEntity.ok(String.format("PurchaseOrderHeader with id '%s' deleted successfully", id));
     }
 
-
+    private ResponseEntity<PurchaseOrderHeader>  fallBackSaveOrderHeader(@Valid @RequestBody CreatePurchaseOrderHeaderDto requestDto, RuntimeException e) {
+        return new ResponseEntity("Service failed - ProductManagement/EmployeeManagement", HttpStatus.SERVICE_UNAVAILABLE);
+    }
 
 
 }

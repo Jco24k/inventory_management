@@ -1,16 +1,19 @@
 package com.purchase.management.controllers;
 
 import com.purchase.management.config.PathController;
+import com.purchase.management.dtos.create.CreateProductWarehouseStockDetailDto;
 import com.purchase.management.dtos.create.CreatePurchaseOrderDetailDto;
 import com.purchase.management.dtos.create.CreatePurchaseOrderHeaderDto;
 import com.purchase.management.dtos.update.UpdateProductWarehouseStockDetailDto;
 import com.purchase.management.dtos.update.UpdatePurchaseOrderDetailDto;
 import com.purchase.management.dtos.update.UpdatePurchaseOrderHeaderDto;
+import com.purchase.management.entities.InventoryIncomeHeader;
 import com.purchase.management.entities.PurchaseOrderHeader;
 import com.purchase.management.entities.composite.ProductWarehouseStockDetail;
 import com.purchase.management.entities.composite.PurchaseOrderDetail;
 import com.purchase.management.services.interfaces.IPurchaseOrderDetailService;
 import com.purchase.management.services.interfaces.IPurchaseOrderHeaderService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +42,7 @@ public class PurchaseOrderDetailController {
         return ResponseEntity.ok(service.findOne(purchaseOrderHeaderId,productId));
     }
 
+    @CircuitBreaker(name = "productCB", fallbackMethod = "fallBackSavePurchaseOrder")
     @PostMapping
     public ResponseEntity<PurchaseOrderDetail> save(@Valid @RequestBody
                                                         CreatePurchaseOrderDetailDto requestDto,
@@ -54,7 +58,11 @@ public class PurchaseOrderDetailController {
         return ResponseEntity.ok(service.update(requestDto,purchaseOrderHeaderId,productId));
     }
 
-
+    private ResponseEntity<PurchaseOrderDetail>  fallBackSavePurchaseOrder(@Valid @RequestBody
+                                                                    CreatePurchaseOrderDetailDto requestDto,
+                                                                    @RequestParam(value = "purchaseOrderHeaderId", required = true) Long purchaseOrderHeaderId, RuntimeException e) {
+        return new ResponseEntity("Service failed - ProductManagement", HttpStatus.SERVICE_UNAVAILABLE);
+    }
 
 
 }

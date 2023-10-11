@@ -1,14 +1,17 @@
 package com.purchase.management.controllers;
 
 import com.purchase.management.config.PathController;
+import com.purchase.management.dtos.create.CreateInventoryIncomeDetailDto;
 import com.purchase.management.dtos.create.CreateInventoryIncomeHeaderDto;
 import com.purchase.management.dtos.create.CreatePurchaseOrderHeaderDto;
 import com.purchase.management.dtos.update.UpdateInventoryIncomeHeaderDto;
 import com.purchase.management.dtos.update.UpdatePurchaseOrderHeaderDto;
 import com.purchase.management.entities.InventoryIncomeHeader;
 import com.purchase.management.entities.PurchaseOrderHeader;
+import com.purchase.management.entities.composite.InventoryIncomeDetail;
 import com.purchase.management.services.interfaces.IInventoryIncomeHeaderService;
 import com.purchase.management.services.interfaces.IPurchaseOrderHeaderService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +39,13 @@ public class InventoryIncomeHeaderController {
         return ResponseEntity.ok(service.findOne(id));
     }
 
+    @CircuitBreaker(name = "allCB", fallbackMethod = "fallBackSaveHeader")
     @PostMapping
     public ResponseEntity<InventoryIncomeHeader> save(@Valid @RequestBody CreateInventoryIncomeHeaderDto requestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(requestDto));
     }
 
+    @CircuitBreaker(name = "allCB", fallbackMethod = "fallBackSaveHeader")
     @PatchMapping("/{id}")
     public ResponseEntity<InventoryIncomeHeader> patch(@PathVariable Long id,
                                          @RequestBody @Valid UpdateInventoryIncomeHeaderDto requestDto)
@@ -54,7 +59,9 @@ public class InventoryIncomeHeaderController {
         return ResponseEntity.ok(String.format("InventoryIncomeHeader with id '%s' deleted successfully", id));
     }
 
-
+    private ResponseEntity<InventoryIncomeHeader> fallBackSaveHeader(@Valid @RequestBody CreateInventoryIncomeHeaderDto requestDto, RuntimeException e) {
+        return new ResponseEntity("Service failed - ProductManagement/EmployeeManagement", HttpStatus.SERVICE_UNAVAILABLE);
+    }
 
 
 }

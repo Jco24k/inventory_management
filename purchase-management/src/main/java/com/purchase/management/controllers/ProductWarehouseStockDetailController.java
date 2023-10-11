@@ -2,13 +2,16 @@ package com.purchase.management.controllers;
 
 import com.purchase.management.config.PathController;
 import com.purchase.management.dtos.create.CreateInventoryIncomeDetailDto;
+import com.purchase.management.dtos.create.CreateInventoryIncomeHeaderDto;
 import com.purchase.management.dtos.create.CreateProductWarehouseStockDetailDto;
 import com.purchase.management.dtos.update.UpdateInventoryIncomeDetailDto;
 import com.purchase.management.dtos.update.UpdateProductWarehouseStockDetailDto;
+import com.purchase.management.entities.InventoryIncomeHeader;
 import com.purchase.management.entities.composite.InventoryIncomeDetail;
 import com.purchase.management.entities.composite.ProductWarehouseStockDetail;
 import com.purchase.management.services.interfaces.IInventoryIncomeDetailService;
 import com.purchase.management.services.interfaces.IProductWarehouseStockDetailService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +40,7 @@ public class ProductWarehouseStockDetailController {
         return ResponseEntity.ok(service.findOne(productId,productId,true));
     }
 
+    @CircuitBreaker(name = "productCB", fallbackMethod = "fallBackSaveStock")
     @PostMapping
     public ResponseEntity<ProductWarehouseStockDetail> save(@Valid @RequestBody
                                                                 CreateProductWarehouseStockDetailDto requestDto,
@@ -52,6 +56,11 @@ public class ProductWarehouseStockDetailController {
         return ResponseEntity.ok(service.update(requestDto,productId,warehouseId));
     }
 
+    private ResponseEntity<InventoryIncomeHeader> fallBackSaveStock(@Valid @RequestBody
+                                                                    CreateProductWarehouseStockDetailDto requestDto,
+                                                                    @RequestParam(value = "productId", required = true) Long productId, RuntimeException e) {
+        return new ResponseEntity("Service failed - ProductManagement", HttpStatus.SERVICE_UNAVAILABLE);
+    }
 
 
 }
