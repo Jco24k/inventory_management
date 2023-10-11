@@ -3,7 +3,9 @@ package com.proyect.employee.employee.config;
 import com.proyect.employee.employee.entities.enums.EPermission;
 import com.proyect.employee.employee.security.JwtAuthenticationFilter;
 import com.proyect.employee.employee.security.UserDetailServiceImpl;
+import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,7 +31,10 @@ public class SecurityConfig {
 
     private  final JwtAuthenticationFilter jwtAuthenticationFilter;
     private  final UserDetailServiceImpl userDetailService;
-
+    @Bean
+    MeterRegistryCustomizer<MeterRegistry> metricsCommonTags() {
+        return registry -> registry.config().commonTags("application", "MyApplicationName");
+    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http.csrf(AbstractHttpConfigurer::disable)
