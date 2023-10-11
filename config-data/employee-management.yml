@@ -1,3 +1,4 @@
+
 server:
   port: ${PORT:${SERVER_PORT:0}}
   servlet:
@@ -48,3 +49,14 @@ eureka:
       default-zone: http://localhost:8761/eureka
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+
+management:
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: *
