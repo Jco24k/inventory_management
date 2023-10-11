@@ -32,8 +32,4 @@ public class Category extends BaseEntity{
     @JsonManagedReference
     private Set<SubCategory> subCategories = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade = { CascadeType.MERGE }, mappedBy = "categories" ,targetEntity = Product.class)
-    @JsonBackReference
-    private Set<Product> products = new HashSet<>();
-
 }

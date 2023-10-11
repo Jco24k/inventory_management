@@ -32,7 +32,7 @@ public class CreateProductDto {
 
     @Nullable()
     @NoDuplicates()
-    private List<Long> categoryIds = new ArrayList<>();
+    private List<Long> subCategoryIds = new ArrayList<>();
 
     @Nullable()
     private List<CreateProductProviderDto> productProviderDtos = new ArrayList<>();

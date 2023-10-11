@@ -8,6 +8,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -30,5 +32,9 @@ public class SubCategory extends BaseEntity {
     @JoinColumn(name = "category_id",nullable = false)
     @JsonBackReference
     private Category category;
+
+    @ManyToMany(fetch = FetchType.EAGER,cascade = { CascadeType.MERGE }, mappedBy = "subCategories" ,targetEntity = Product.class)
+    @JsonBackReference
+    private Set<Product> products = new HashSet<>();
 
 }

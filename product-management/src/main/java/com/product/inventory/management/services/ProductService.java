@@ -7,9 +7,9 @@ import com.product.inventory.management.entities.composite.ProductProvider;
 import com.product.inventory.management.exception.ResourceNotFoundException;
 import com.product.inventory.management.mappers.MapperNotNull;
 import com.product.inventory.management.repositories.ProductRepository;
-import com.product.inventory.management.services.interfaces.ICategoryService;
 import com.product.inventory.management.services.interfaces.IProductProviderService;
 import com.product.inventory.management.services.interfaces.IProductService;
+import com.product.inventory.management.services.interfaces.ISubCategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -27,14 +27,14 @@ import java.util.stream.Collectors;
 public class ProductService implements IProductService {
 
     private final ProductRepository repository;
-    private final ICategoryService categoryService;
+    private final ISubCategoryService subCategoryService;
     private final IProductProviderService productProviderService;
 
     public ProductService(ProductRepository repository,
-                          ICategoryService categoryService,
+                          ISubCategoryService subCategoryService,
                                   @Lazy IProductProviderService productProviderService) {
         this.repository = repository;
-        this.categoryService = categoryService;
+        this.subCategoryService = subCategoryService;
         this.productProviderService = productProviderService;
     }
 
@@ -82,7 +82,7 @@ public class ProductService implements IProductService {
                      protected void configure() {
                          skip().setProductProviders(null);
                          skip().setLogPrices(null);
-                         skip().setCategories(null);
+                         skip().setSubCategories(null);
                      }
                  };
         modelMapper.addMappings(propertyMap);
@@ -92,9 +92,9 @@ public class ProductService implements IProductService {
     @Override
     public void getAndVerifyDto(CreateProductDto requestDto,Product entity){
         modelMapperWithoutFks().map(requestDto, entity);
-        if(!requestDto.getCategoryIds().isEmpty()){
-            entity.getCategories().clear();
-            entity.setCategories(categoryService.getCategories(new HashSet<>(requestDto.getCategoryIds())));
+        if(!requestDto.getSubCategoryIds().isEmpty()){
+            entity.getSubCategories().clear();
+            entity.setSubCategories(subCategoryService.getSubCategories(new HashSet<>(requestDto.getSubCategoryIds())));
         }
         if(!requestDto.getProductProviderDtos().isEmpty()){
             entity.getProductProviders().clear();

@@ -41,13 +41,13 @@ public class Product extends BaseEntity {
     @Column(name = "has_igv", columnDefinition = "boolean default true")
     private Boolean hasIgv;
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.MERGE} ,targetEntity = Category.class)
-    @JoinTable(name="products_categories",
+    @ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.MERGE} ,targetEntity = SubCategory.class)
+    @JoinTable(name="products_subcategories",
             joinColumns = @JoinColumn(name="product_id"),
-            inverseJoinColumns = @JoinColumn(name="category_id")
+            inverseJoinColumns = @JoinColumn(name="subcategory_id")
     )
     @JsonManagedReference
-    private Set<Category> categories = new HashSet<>();
+    private Set<SubCategory> subCategories = new HashSet<>();
 
     @OneToMany(fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST,CascadeType.MERGE }, mappedBy = "product" ,targetEntity = ProductProvider.class)
     @JsonManagedReference()
